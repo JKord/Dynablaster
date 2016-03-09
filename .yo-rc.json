@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "pssn",
+    "packageName": "jkord.pssn",
+    "packageFolder": "jkord/pssn",
+    "authenticationType": "session",
+    "hibernateCache": "no",
+    "clusteredHttpSession": "no",
+    "websocket": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "no",
+    "useSass": true,
+    "buildTool": "gradle",
+    "frontendBuilder": "gulp",
+    "enableTranslation": false,
+    "enableSocialSignIn": true,
+    "rememberMeKey": "b77da44fa67d021b20df518c0c13eead0e2e007e",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}
