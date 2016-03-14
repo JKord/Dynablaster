@@ -168,7 +168,7 @@ dependencies {
     compile group: 'org.springframework.social', name: 'spring-social-security', version: spring_social_security_version
     compile group: 'org.springframework.social', name: 'spring-social-google', version: spring_social_google_version
     compile group: 'org.springframework.social', name: 'spring-social-facebook', version: spring_social_facebook_version
-    compile group: 'com.github.JKord', name: 'spring-social-vkontakte', version: spring_social_vkontakte_version
+    compile files('libs/spring-social-vkontakte-1.1.1.jar')
 
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'com.jayway.jsonpath', name: 'json-path'

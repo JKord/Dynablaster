@@ -12,17 +12,14 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.support.URIBuilder;
 import org.springframework.social.vkontakte.api.Group;
+import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.view.RedirectView;
 
-import org.springframework.social.vkontakte.api.VK;
-import org.springframework.social.vkontakte.api.VKontakteProfile;
-
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/social")
@@ -57,13 +54,13 @@ public class SocialController {
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Group> info() {
+    public List<Group> info(WebRequest webRequest) {
         User user = userService.getUserWithAuthorities();
         MultiValueMap<String, Connection<?>> connections = socialService.getConnections(user.getLogin());
 
-        VK vk = (VK) connections.getFirst("vkontakte").getApi();
+        VKontakte vk = (VKontakte) connections.getFirst("vkontakte").getApi();
 
-        return vk.groupOperations().getGroups();
+        return vk.groupsOperations().getGroups();
     }
 
 }
