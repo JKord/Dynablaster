@@ -168,7 +168,7 @@ dependencies {
     compile group: 'org.springframework.social', name: 'spring-social-security', version: spring_social_security_version
     compile group: 'org.springframework.social', name: 'spring-social-google', version: spring_social_google_version
     compile group: 'org.springframework.social', name: 'spring-social-facebook', version: spring_social_facebook_version
-    compile group: 'org.springframework.social', name: 'spring-social-twitter', version: spring_social_twitter_version
+    compile group: 'com.github.JKord', name: 'spring-social-vkontakte', version: spring_social_vkontakte_version
 
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'com.jayway.jsonpath', name: 'json-path'
@@ -182,9 +182,7 @@ dependencies {
     testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: gatling_version
 
     testCompile group: 'com.h2database', name: 'h2'
-    optional group: 'org.springframework.boot', name:'spring-boot-configuration-processor', version: spring_boot_version,
-
-    'com.github.weekens:spring-social-vkontakte:1.1.3.M3'
+    optional group: 'org.springframework.boot', name:'spring-boot-configuration-processor', version: spring_boot_version
 }
 
 compileJava.dependsOn(processResources)

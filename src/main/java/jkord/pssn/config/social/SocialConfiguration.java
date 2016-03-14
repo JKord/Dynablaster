@@ -21,7 +21,7 @@ import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
-import org.springframework.social.vkontakte.connect.VKontakteConnectionFactory;
+import org.springframework.social.vkontakte.connect.VKConnectionFactory;
 
 import javax.inject.Inject;
 
@@ -75,15 +75,15 @@ public class SocialConfiguration implements SocialConfigurer {
         String vkClientId = environment.getProperty("spring.social.vk.clientId");
         String vkClientSecret = environment.getProperty("spring.social.vk.clientSecret");
         if (vkClientId != null && vkClientSecret != null) {
-            log.debug("Configuring VKontakteConnectionFactory");
+            log.debug("Configuring VKConnectionFactory");
             connectionFactoryConfigurer.addConnectionFactory(
-                new VKontakteConnectionFactory(
+                new VKConnectionFactory(
                     vkClientId,
                     vkClientSecret
                 )
             );
         } else {
-            log.error("Cannot configure VKontakteConnectionFactory id or secret null");
+            log.error("Cannot configure VKConnectionFactory id or secret null");
         }
     }
 
