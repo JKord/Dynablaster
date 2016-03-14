@@ -73,6 +73,7 @@ Desktop.ini
 /bin/**
 /spring_loaded/**
 /deploy/**
+!libs/*
 
 ######################
 # Logs
