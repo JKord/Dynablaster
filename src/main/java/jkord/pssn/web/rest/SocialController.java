@@ -1,18 +1,25 @@
 package jkord.pssn.web.rest;
 
+import jkord.pssn.domain.User;
 import jkord.pssn.service.SocialService;
 
+import jkord.pssn.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.http.MediaType;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.support.URIBuilder;
+import org.springframework.social.vkontakte.api.Group;
+import org.springframework.social.vkontakte.api.VKontakte;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @RestController
 @RequestMapping("/social")
@@ -26,7 +33,9 @@ public class SocialController {
     private ProviderSignInUtils providerSignInUtils;
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public RedirectView signUp(WebRequest webRequest, @CookieValue(name = "NG_TRANSLATE_LANG_KEY", required = false, defaultValue = "\"en\"") String langKey) {
+    public RedirectView signUp(WebRequest webRequest, @CookieValue(
+        name = "NG_TRANSLATE_LANG_KEY", required = false, defaultValue = "\"en\"") String langKey)
+    {
         try {
             Connection<?> connection = providerSignInUtils.getConnectionFromSession(webRequest);
             socialService.createSocialUser(connection, langKey.replace("\"", ""));

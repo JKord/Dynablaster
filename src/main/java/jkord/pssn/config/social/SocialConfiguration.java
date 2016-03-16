@@ -21,8 +21,7 @@ import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
-import org.springframework.social.twitter.connect.TwitterConnectionFactory;
-// jhipster-needle-add-social-connection-factory-import-package
+import org.springframework.social.vkontakte.connect.VKontakteConnectionFactory;
 
 import javax.inject.Inject;
 
@@ -72,22 +71,20 @@ public class SocialConfiguration implements SocialConfigurer {
             log.error("Cannot configure FacebookConnectionFactory id or secret null");
         }
 
-        // Twitter configuration
-        String twitterClientId = environment.getProperty("spring.social.twitter.clientId");
-        String twitterClientSecret = environment.getProperty("spring.social.twitter.clientSecret");
-        if (twitterClientId != null && twitterClientSecret != null) {
-            log.debug("Configuring TwitterConnectionFactory");
+        // vk configuration
+        String vkClientId = environment.getProperty("spring.social.vk.clientId");
+        String vkClientSecret = environment.getProperty("spring.social.vk.clientSecret");
+        if (vkClientId != null && vkClientSecret != null) {
+            log.debug("Configuring VKontakteConnectionFactory");
             connectionFactoryConfigurer.addConnectionFactory(
-                new TwitterConnectionFactory(
-                    twitterClientId,
-                    twitterClientSecret
+                new VKontakteConnectionFactory(
+                    vkClientId,
+                    vkClientSecret
                 )
             );
         } else {
-            log.error("Cannot configure TwitterConnectionFactory id or secret null");
+            log.error("Cannot configure VKontakteConnectionFactory id or secret null");
         }
-
-        // jhipster-needle-add-social-connection-factory
     }
 
     @Override

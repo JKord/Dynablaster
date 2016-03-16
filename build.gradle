@@ -17,9 +17,14 @@ buildscript {
     }
 }
 
+
+
+apply plugin: 'idea'
 apply plugin: 'java'
+
 sourceCompatibility=1.8
 targetCompatibility=1.8
+
 apply plugin: 'maven'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
@@ -105,12 +110,15 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hppc', version: jackson_version
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jackson_version
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate4', version: jackson_version
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jackson_version
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jackson_version
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jackson_version
+    compileOnly group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: jackson_mapper_version
+
     compile (group: 'com.ryantenney.metrics', name: 'metrics-spring', version: metrics_spring_version) {
         exclude(module: 'metrics-core')
         exclude(module: 'metrics-healthchecks')
-    } 
+    }
     compile(group: 'com.zaxxer', name: 'HikariCP', version: HikariCP_version) {
         exclude(module: 'tools')
     }
@@ -120,7 +128,7 @@ dependencies {
     compile group: 'javax.transaction', name: 'javax.transaction-api'
     compile group: 'org.apache.geronimo.javamail', name: 'geronimo-javamail_1.4_mail', version: geronimo_javamail_1_4_mail_version
     compile group: 'org.hibernate', name: 'hibernate-core', version: hibernate_entitymanager_version
-    
+
     compile group: 'org.hibernate', name: 'hibernate-envers'
     compile group: 'org.hibernate', name: 'hibernate-validator'
     compile (group: 'org.liquibase', name: 'liquibase-core', version: liquibase_core_version) {
@@ -150,15 +158,18 @@ dependencies {
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: springfox_version){
         exclude module: 'mapstruct'
     }
-    
+
     compile group: 'mysql', name: 'mysql-connector-java'
     compile group: 'fr.ippon.spark.metrics', name: 'metrics-spark-reporter', version: metrics_spark_reporter_version
     compile group: 'org.mapstruct', name: 'mapstruct-jdk8', version: mapstruct_version
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: httpclient_version
+
+    compile group: 'org.springframework.social', name: 'spring-social-web', version: spring_social_version
     compile group: 'org.springframework.social', name: 'spring-social-security', version: spring_social_security_version
     compile group: 'org.springframework.social', name: 'spring-social-google', version: spring_social_google_version
     compile group: 'org.springframework.social', name: 'spring-social-facebook', version: spring_social_facebook_version
-    compile group: 'org.springframework.social', name: 'spring-social-twitter', version: spring_social_twitter_version
+    compile files('libs/spring-social-vkontakte-1.1.1.jar')
+
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'com.jayway.jsonpath', name: 'json-path'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
@@ -167,12 +178,11 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core'
     testCompile group: 'com.mattbertolini', name: 'liquibase-slf4j', version: liquibase_slf4j_version
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-    
+
     testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: gatling_version
-    
+
     testCompile group: 'com.h2database', name: 'h2'
     optional group: 'org.springframework.boot', name:'spring-boot-configuration-processor', version: spring_boot_version
-    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
 compileJava.dependsOn(processResources)

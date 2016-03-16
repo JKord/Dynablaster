@@ -35,12 +35,9 @@ spring:
             clientId: xxx
             clientSecret: xxx
 
-        # see https://apps.twitter.com/app/
-        twitter:
-            clientId: xxx
-            clientSecret: xxx
-
-        # jhipster-needle-add-social-configuration
+        vk:
+            clientId: 5344155
+            clientSecret: yUwGfsZj14C3qzoE9chb
 
 security:
     basic:

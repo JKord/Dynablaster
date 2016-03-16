@@ -15,11 +15,10 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SocialService {
@@ -93,7 +92,7 @@ public class SocialService {
      */
     private String getLoginDependingOnProviderId(UserProfile userProfile, String providerId) {
         switch (providerId) {
-            case "twitter":
+            case "vkontakte":
                 return userProfile.getUsername().toLowerCase();
             default:
                 return userProfile.getEmail();
@@ -103,5 +102,9 @@ public class SocialService {
     private void createSocialConnection(String login, Connection<?> connection) {
         ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
         connectionRepository.addConnection(connection);
+    }
+
+    public MultiValueMap<String, Connection<?>> getConnections(String userId) {
+        return usersConnectionRepository.createConnectionRepository(userId).findAllConnections();
     }
 }

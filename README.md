@@ -1,3 +1,4 @@
-# pssn - Photo search in social networks
+# PSSN
+Photo search in social networks
 
-GeekHub: Coursework 
+GeekHub: Coursework
