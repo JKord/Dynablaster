@@ -17,7 +17,12 @@
                         <span class="hidden-sm">Home</span>
                     </a>
                 </li>
-                <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+                <li ng-class="{active: $state.includes('import')}">
+                    <a ui-sref="import" data-toggle="collapse" data-target=".navbar-collapse.in">
+                        <span class="glyphicon glyphicon-import"></span>
+                        <span class="hidden-sm">Import users</span>
+                    </a>
+                </li>
                 <li ui-sref-active="active" ng-switch-when="true" class="dropdown pointer">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                         <span>

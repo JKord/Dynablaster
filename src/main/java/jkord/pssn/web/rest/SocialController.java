@@ -32,9 +32,6 @@ public class SocialController {
     @Inject
     private ProviderSignInUtils providerSignInUtils;
 
-    @Inject
-    private UserService userService;
-
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public RedirectView signUp(WebRequest webRequest, @CookieValue(
         name = "NG_TRANSLATE_LANG_KEY", required = false, defaultValue = "\"en\"") String langKey)
@@ -52,15 +49,4 @@ public class SocialController {
                 .build().toString(), true);
         }
     }
-
-    @RequestMapping(value = "/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Group> info(WebRequest webRequest) {
-        User user = userService.getUserWithAuthorities();
-        MultiValueMap<String, Connection<?>> connections = socialService.getConnections(user.getLogin());
-
-        VKontakte vk = (VKontakte) connections.getFirst("vkontakte").getApi();
-
-        return vk.groupsOperations().getGroups();
-    }
-
 }
