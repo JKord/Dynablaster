@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('ImportController', function ($scope, SNService) {
         SNService.findGroups().then(function (data) {
             $scope.groups = data;

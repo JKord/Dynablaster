@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('sessions', {
@@ -17,7 +17,7 @@ angular.module('pssnApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             });
     });

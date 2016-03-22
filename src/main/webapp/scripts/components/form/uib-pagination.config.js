@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .config(function (uibPaginationConfig) {
         uibPaginationConfig.itemsPerPage = 20;
         uibPaginationConfig.maxSize = 5;

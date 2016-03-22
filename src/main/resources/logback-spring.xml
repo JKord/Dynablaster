@@ -22,7 +22,7 @@
     </appender>
 -->
 
-    <logger name="jkord.pssn" level="@logback.loglevel@"/>
+    <logger name="jkord.core" level="@logback.loglevel@"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

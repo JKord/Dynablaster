@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .directive('jhSocial', function($filter, SocialService) {
         return {
             restrict: 'E',

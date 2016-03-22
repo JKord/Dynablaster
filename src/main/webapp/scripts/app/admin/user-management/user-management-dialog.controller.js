@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('pssnApp').controller('UserManagementDialogController',
-    ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'User', 
+angular.module('dynablasterApp').controller('UserManagementDialogController',
+    ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'User',
         function($scope, $stateParams, $uibModalInstance, entity, User) {
 
         $scope.user = entity;

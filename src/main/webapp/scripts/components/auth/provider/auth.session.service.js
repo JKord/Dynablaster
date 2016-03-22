@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('AuthServerProvider', function loginService($http, localStorageService, $window) {
         return {
             login: function(credentials) {

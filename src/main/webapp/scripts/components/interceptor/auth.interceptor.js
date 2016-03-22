@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('authExpiredInterceptor', function ($rootScope, $q, $injector, localStorageService) {
         return {
             responseError: function(response) {

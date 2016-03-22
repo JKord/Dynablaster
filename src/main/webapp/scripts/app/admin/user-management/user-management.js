@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('user-management', {
@@ -17,7 +17,7 @@ angular.module('pssnApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             })
             .state('user-management-detail', {
@@ -34,7 +34,7 @@ angular.module('pssnApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             })
             .state('user-management.new', {

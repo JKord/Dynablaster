@@ -1,5 +1,5 @@
-pssn-sonar:
-  container_name: pssn-sonar
+core-sonar:
+  container_name: core-sonar
   image: sonarqube:4.5.6
   ports:
     - "9000:9000"

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .directive('activeLink', function(location) {
         return {
             restrict: 'A',

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('HealthModalController', function($scope, $uibModalInstance, currentHealth, baseName, subSystemName) {
 
         $scope.currentHealth = currentHealth;

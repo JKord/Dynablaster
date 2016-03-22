@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('MetricsController', function ($scope, MonitoringService, $uibModal) {
         $scope.metrics = {};
         $scope.updatingMetrics = true;

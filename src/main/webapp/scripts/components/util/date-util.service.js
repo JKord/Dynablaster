@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .service('DateUtils', function ($filter) {
 
     this.convertLocaleDateToServer = function(date) {

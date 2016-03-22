@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('LogsController', function ($scope, LogsService) {
         $scope.loggers = LogsService.findAll();
 

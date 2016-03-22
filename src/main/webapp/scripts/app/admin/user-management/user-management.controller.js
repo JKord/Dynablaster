@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('UserManagementController', function ($scope, Principal, User, ParseLinks) {
         $scope.users = [];
         $scope.authorities = ["ROLE_USER", "ROLE_ADMIN"];
-		
+
 		Principal.identity().then(function(account) {
             $scope.currentAccount = account;
         });

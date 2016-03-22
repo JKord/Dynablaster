@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('UserManagementDetailController', function ($scope, $stateParams, User) {
         $scope.user = {};
         $scope.load = function (login) {

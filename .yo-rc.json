@@ -1,8 +1,8 @@
 {
   "generator-jhipster": {
-    "baseName": "pssn",
-    "packageName": "jkord.pssn",
-    "packageFolder": "jkord/pssn",
+    "baseName": "dynablaster",
+    "packageName": "jkord",
+    "packageFolder": "jkord",
     "authenticationType": "session",
     "hibernateCache": "no",
     "clusteredHttpSession": "no",

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('RequestResetController', function ($rootScope, $scope, $state, $timeout, Auth) {
 
         $scope.success = null;

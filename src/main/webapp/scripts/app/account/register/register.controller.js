@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('RegisterController', function ($scope, $timeout, Auth) {
         $scope.success = null;
         $scope.error = null;

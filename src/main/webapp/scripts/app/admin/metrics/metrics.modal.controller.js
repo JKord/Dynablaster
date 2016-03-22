@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .controller('MetricsModalController', function($scope, $uibModalInstance, threadDump) {
 
         $scope.threadDump = threadDump;

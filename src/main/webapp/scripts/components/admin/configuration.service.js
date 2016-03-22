@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('ConfigurationService', function ($rootScope, $filter, $http) {
         return {
             get: function() {

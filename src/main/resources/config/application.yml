@@ -25,16 +25,12 @@ spring:
     thymeleaf:
         mode: XHTML
     social:
-        # see https://developers.google.com/+/web/signin/server-side-flow#step_1_create_a_client_id_and_client_secret
         google:
             clientId: xxx
             clientSecret: xxx
-
-        # see https://developers.facebook.com/docs/facebook-login/v2.2
         facebook:
             clientId: xxx
             clientSecret: xxx
-
         vk:
             clientId: 5344155
             clientSecret: yUwGfsZj14C3qzoE9chb
@@ -60,14 +56,14 @@ jhipster:
         #allow-credentials: true
         #max-age: 1800
     mail:
-        from: pssn@localhost
+        from: dynablaster@localhost
     security:
         rememberme:
             # security key (this key should be unique for your application, and kept secret)
             key: b77da44fa67d021b20df518c0c13eead0e2e007e
     swagger:
-        title: pssn API
-        description: pssn API documentation
+        title: Dynablaster API
+        description: Dynablaster API documentation
         version: 0.0.1
         termsOfServiceUrl:
         contact:

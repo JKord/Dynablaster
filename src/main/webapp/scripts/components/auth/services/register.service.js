@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('Register', function ($resource) {
         return $resource('api/register', {}, {
         });
