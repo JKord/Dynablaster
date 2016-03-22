@@ -1,12 +1,22 @@
 <div ng-cloak>
     <div class="row">
-        <div class="col-md-4"></div>
+        <div class="col-md-2"></div>
         <div class="col-md-8">
             <h1>Welcome to Dynablaster!</h1>
 
             <div ng-switch="isAuthenticated()">
                 <div class="alert alert-success" ng-switch-when="true">
                     You are logged in as user "{{account.login}}".
+                </div>
+
+                <div class="panel panel-default" ng-switch-when="true">
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked nav-center">
+                            <li role="presentation"><a ui-sref="game">Single player</a></li>
+                            <li role="presentation"><a href="#">Multi player</a></li>
+                            <li role="presentation"><a href="#">Play with bots</a></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="alert alert-warning" ng-switch-when="false">

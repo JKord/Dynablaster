@@ -266,7 +266,7 @@ ul#strength {
    flex-direction: row;
    -webkit-justify-content: flex-end;
    justify-content: flex-end;
-}  
+}
 
 /* Align text in td verifically (top aligned by Bootstrap) */
 .jh-table > tbody > tr > td {
@@ -275,3 +275,7 @@ ul#strength {
 /* end of entity tables helpers */
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+
+.nav.nav-center a {
+    text-align: center;
+}

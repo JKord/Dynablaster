@@ -20,13 +20,15 @@
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div ng-show="{{ENV === 'dev'}}" class="development" ng-cloak=""></div>
         <div ui-view="navbar" ng-cloak=""></div>
         <div class="container">
             <div class="well" ui-view="content"></div>
 
             <div class="footer">
-                <p translate="footer">Dynablaster 2016 &copy;</p>
+                <p translate="footer">
+                    Dynablaster 2016 &copy;
+                    <span ng-show="{{ENV === 'dev'}}" ng-cloak=""> - dev</span>
+                </p>
             </div>
         </div>
 
@@ -50,6 +52,8 @@
         <!-- endbower -->
         <!-- endbuild -->
 
+
+        <script src="http://code.createjs.com/createjs-2014.12.12.min.js"></script>
 
         <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
         <script src="scripts/app/app.js"></script>
@@ -76,7 +80,6 @@
         <script src="scripts/components/navbar/navbar.directive.js"></script>
         <script src="scripts/components/navbar/navbar.controller.js"></script>
         <script src="scripts/components/user/user.service.js"></script>
-        <script src="scripts/components/user/sn.service.js"></script>
         <script src="scripts/components/util/truncate.filter.js"></script>
         <script src="scripts/components/util/base64.service.js"></script>
         <script src="scripts/components/util/capitalize.filter.js"></script>
@@ -86,6 +89,13 @@
         <script src="scripts/components/util/date-util.service.js"></script>
         <script src="scripts/components/util/data-util.service.js"></script>
         <script src="scripts/components/util/sort.directive.js"></script>
+
+        <script src="scripts/components/game/uiClasses/GOHero.js"></script>
+        <script src="scripts/components/game/loaderRes.service.js"></script>
+        <script src="scripts/components/game/game.service.js"></script>
+        <script src="scripts/components/game/game-window.directive.js"></script>
+        <script src="scripts/components/gameWindow/game-window.controller.js"></script>
+
         <script src="scripts/app/account/account.js"></script>
         <script src="scripts/app/account/activate/activate.js"></script>
         <script src="scripts/app/account/activate/activate.controller.js"></script>
@@ -132,8 +142,8 @@
         <script src="scripts/components/auth/provider/auth.session.service.js"></script>
         <script src="scripts/app/account/sessions/sessions.js"></script>
         <script src="scripts/app/account/sessions/sessions.controller.js"></script>
-        <script src="scripts/app/import/import.js"></script>
-        <script src="scripts/app/import/import.controller.js"></script>
+        <script src="scripts/app/game/game.js"></script>
+        <script src="scripts/app/game/game.controller.js"></script>
     <!-- endbuild -->
 </body>
 </html>

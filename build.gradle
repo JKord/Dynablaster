@@ -46,6 +46,7 @@ springBoot {
 
 bootRun {
     addResources = false
+    args = ["--spring.profiles.active=dev,fast"]
 }
 
 

@@ -12,11 +12,16 @@ public class GameMap implements Serializable {
     protected MapObject mapObjects[][];
 
     public GameMap() {
-        mapObjects = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
+        mapObjects = new MapObject[VERTICAL_SIZE][HORIZONTAL_SIZE];
 
-        for (int i = 1; i < HORIZONTAL_SIZE; i++) {
-            for (int j = 1; j < HORIZONTAL_SIZE; j++) {
-                if (i  % 2 != 0 || j  % 2 != 0) {
+        for (int i = 0; i < HORIZONTAL_SIZE; i++) {
+            mapObjects[0][i] = new MapObject(MapObjectType.FREE);
+            mapObjects[VERTICAL_SIZE - 1][i] = new MapObject(MapObjectType.FREE);
+        }
+
+        for (int i = 1; i < VERTICAL_SIZE; i++) {
+            for (int j = 0; j < HORIZONTAL_SIZE - 1; j++) {
+                if (i  % 2 != 0 && j  % 2 != 0) {
                     mapObjects[i][j] = new MapObject(MapObjectType.WALL);
                 } else {
                     mapObjects[i][j] = new MapObject(MapObjectType.FREE);

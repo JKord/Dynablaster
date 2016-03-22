@@ -3,16 +3,16 @@
 angular.module('dynablasterApp')
     .config(function ($stateProvider) {
         $stateProvider
-            .state('import', {
+            .state('game', {
                 parent: 'site',
-                url: '/social/import',
+                url: '/game',
                 data: {
                     authorities: ['ROLE_USER']
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/import/import.html',
-                        controller: 'ImportController'
+                        templateUrl: 'scripts/app/game/game.html',
+                        controller: 'GameController'
                     }
                 },
                 resolve: {
