@@ -8,7 +8,7 @@ enum MapObjectType {
     WALL,
     BOMB,
     PLAYER,
-    BOT,
+    MONSTER,
     ENEMY
 }
 

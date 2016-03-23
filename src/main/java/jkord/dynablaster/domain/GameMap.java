@@ -12,12 +12,35 @@ public class GameMap implements Serializable {
     public static final int HORIZONTAL_SIZE = 13;
     public static final int VERTICAL_SIZE = 11;
     public static final int COUNT_BRICKS = 30;
+    public static final int COUNT_MONSTERS = 5;
+
+    private static final  List<String> PROTECTED_AREA = Arrays.asList(
+        "00", "01", "10",
+        "011", "012", "112",
+        "90", "100", "101",
+        "1011", "1012", "912"
+    );
 
     protected MapObject mapObjects[][];
 
     public GameMap() {
         mapObjects = new MapObject[VERTICAL_SIZE][HORIZONTAL_SIZE];
         createMap();
+    }
+
+    @JsonValue
+    public MapObject[][] getMap() {
+        return mapObjects;
+    }
+
+    public boolean setObjToMap(MapObject obj, int x, int y) {
+        if (mapObjects[x][y].type == MapObjectType.FREE) {
+            mapObjects[x][y] = obj;
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected void createMap() {
@@ -36,40 +59,23 @@ public class GameMap implements Serializable {
             }
         }
 
-        Random rand = new Random();
-        List<String> protectedArea = Arrays.asList(
-            "00", "01", "10",
-            "011", "012", "112",
-            "90", "100", "101",
-            "1011", "1012", "912"
-        );
+        generateRandObj(COUNT_BRICKS, MapObjectType.BRICK);
+        generateRandObj(COUNT_MONSTERS, MapObjectType.MONSTER);
+    }
 
-        for (int i = 0; i < COUNT_BRICKS; i++) {
+    private void generateRandObj(int count, MapObjectType type) {
+        Random rand = new Random();
+        for (int i = 0; i < count; i++) {
             int x = rand.nextInt(VERTICAL_SIZE - 1) + 1,
                 y = rand.nextInt(HORIZONTAL_SIZE - 1) + 1;
 
             if (mapObjects[x][y].getType() == MapObjectType.FREE &&
-                ! protectedArea.contains(String.valueOf(x) + String.valueOf(y)))
+                ! PROTECTED_AREA.contains(String.valueOf(x) + String.valueOf(y)))
             {
-                mapObjects[x][y] = new MapObject(MapObjectType.BRICK);
+                mapObjects[x][y] = new MapObject(type);
             } else {
                 i--;
             }
-        }
-    }
-
-    @JsonValue
-    public MapObject[][] getMap() {
-        return mapObjects;
-    }
-
-    public boolean setObjToMap(MapObject obj, int x, int y) {
-        if (mapObjects[x][y].type == MapObjectType.FREE) {
-            mapObjects[x][y] = obj;
-
-            return true;
-        } else {
-            return false;
         }
     }
 }

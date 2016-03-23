@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dynablasterApp')
-    .directive('gameWindow',['loaderRes', 'GameService', 'GOGround', 'GOHero', function(loaderRes, GameService, GOGround, GOHero) {
+    .directive('gameWindow', function(loaderRes, gameService, GOGround, GOHero) {
         return {
             restrict: 'EAC',
             replace: true,
@@ -14,9 +14,7 @@ angular.module('dynablasterApp')
             link: function (scope, elem, attrs) {
                 var w, h, gameObj = {};
 
-                console.log(scope);
-
-                GameService.getMap().then(function (data) {
+                gameService.getMap().then(function (data) {
                     scope.map = data;
                     drawGame();
                     elem[0].width = scope.width;
@@ -38,6 +36,8 @@ angular.module('dynablasterApp')
                     w = scope.stage.canvas.width;
                     h = scope.stage.canvas.height;
 
+                    gameService.socketInit();
+
                     loaderRes.getLoader().addEventListener("complete", handleComplete);
                     loaderRes.loadAssets();
                 }
@@ -54,6 +54,8 @@ angular.module('dynablasterApp')
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;
                     createjs.Ticker.addEventListener("tick", tick);
                     scope.$apply();
+
+                    gameService.sendMsg({text: 'fdf'})
                 }
 
                 function keydown(event) {
@@ -79,4 +81,4 @@ angular.module('dynablasterApp')
                 }
             }
         }
-    }]);
+    });

@@ -7,6 +7,7 @@ angular.module('dynablasterApp')
                 {src: "brick.png", id: "brick"},
                 {src: "wall.png", id: "wall"},
                 {src: "cr.png", id: "monster1"},
+                {src: "cr1.png", id: "monster2"},
                 {src: "hero_down.png", id: "heroDown"},
                 {src: "hero_left.png", id: "heroLeft"},
                 {src: "hero_right.png", id: "heroRight"},

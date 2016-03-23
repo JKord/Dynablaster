@@ -5,7 +5,8 @@ angular.module('dynablasterApp')
             this.img = {
                 ground: loaderRes.getResult('ground'),
                 brick: loaderRes.getResult('brick'),
-                wall: loaderRes.getResult('wall')
+                wall: loaderRes.getResult('wall'),
+                monster1: loaderRes.getResult('monster1')
             };
 
             this.ground = new createjs.Shape();
@@ -20,18 +21,18 @@ angular.module('dynablasterApp')
 
             map.forEach(function(items, i) {
                 items.forEach(function(item, j) {
+                    var x = start.x + self.size.w * j,
+                        y = start.y + self.size.h * i;
+
                     switch (item.type) {
                         case 'WALL': {
-                            self.walls.push(self.createGO(self.img.wall,
-                                start.x + self.size.w * j,
-                                start.y + self.size.h * i
-                            ));
+                            self.walls.push(self.createGO(self.img.wall, x, y));
                         } break;
                         case 'BRICK': {
-                            self.bricks.push(self.createGO(self.img.brick,
-                                start.x + self.size.w * j,
-                                start.y + self.size.h * i
-                            ));
+                            self.bricks.push(self.createGO(self.img.brick, x, y));
+                        } break;
+                        case 'MONSTER': {
+                            self.bricks.push(self.createGO(self.img.monster1, x, y));
                         } break;
                     }
                 });
