@@ -3,8 +3,9 @@
 angular.module('dynablasterApp')
     .factory('loaderRes', function (DIR_RES) {
         var manifest = [
+                {src: "ground.jpg", id: "ground"},
                 {src: "brick.png", id: "brick"},
-                {src: "concrete.png", id: "concrete"},
+                {src: "wall.png", id: "wall"},
                 {src: "cr.png", id: "monster1"},
                 {src: "hero_down.png", id: "heroDown"},
                 {src: "hero_left.png", id: "heroLeft"},

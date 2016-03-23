@@ -8,8 +8,8 @@ angular.module('dynablasterApp')
                 right: loaderRes.getResult("heroRight")
             };
 
-            this.step = 35;
-            this.size = {w: 34, h: 44};
+            this.step = 40;
+            this.size = {w: 34, h: 40};
 
             this.player = new createjs.Shape();
             this.setImg(this.img.down);

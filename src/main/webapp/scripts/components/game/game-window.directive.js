@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dynablasterApp')
-    .directive('gameWindow',['loaderRes', 'GOHero', function(loaderRes, GOHero) {
+    .directive('gameWindow',['loaderRes', 'GameService', 'GOGround', 'GOHero', function(loaderRes, GameService, GOGround, GOHero) {
         return {
             restrict: 'EAC',
             replace: true,
@@ -10,15 +10,21 @@ angular.module('dynablasterApp')
                 height: '=height',
                 score: '=score'
             },
-            template: "<canvas width='960' height='400'></canvas>",
+            template: "<canvas width='640' height='520'></canvas>",
             link: function (scope, elem, attrs) {
                 var w, h, gameObj = {};
 
-                drawGame();
-                elem[0].width = scope.width;
-                elem[0].height = scope.height;
-                w = scope.width;
-                h = scope.height;
+                console.log(scope);
+
+                GameService.getMap().then(function (data) {
+                    scope.map = data;
+                    drawGame();
+                    elem[0].width = scope.width;
+                    elem[0].height = scope.height;
+                    w = scope.width;
+                    h = scope.height;
+                });
+
 
                 function drawGame() {
                     if (scope.stage) {
@@ -37,7 +43,10 @@ angular.module('dynablasterApp')
                 }
 
                 function handleComplete() {
-                    gameObj.hero = new GOHero({x: 10, y: 10});
+                    var ground = new GOGround(scope.map);
+                    ground.addToStage(scope.stage);
+
+                    gameObj.hero = new GOHero({x: 60, y: 40});
                     gameObj.hero.addToStage(scope.stage);
 
 
