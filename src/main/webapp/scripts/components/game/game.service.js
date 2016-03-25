@@ -5,8 +5,8 @@ angular.module('dynablasterApp')
         var socket = null, stompClient = null;
 
         return {
-            getMap: function () {
-                return $http.get('api/game/map').then(function (response) {
+            startGame: function (type) {
+                return $http.put('api/game/start/' + type).then(function (response) {
                     return response.data;
                 });
             },

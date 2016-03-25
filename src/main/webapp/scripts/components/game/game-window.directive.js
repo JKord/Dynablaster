@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dynablasterApp')
-    .directive('gameWindow', function(loaderRes, gameService, GOGround, GOHero) {
+    .directive('gameWindow', function(loaderRes, gameService, GOMap) {
         return {
             restrict: 'EAC',
             replace: true,
@@ -12,10 +12,13 @@ angular.module('dynablasterApp')
             },
             template: "<canvas width='640' height='520'></canvas>",
             link: function (scope, elem, attrs) {
-                var w, h, gameObj = {};
+                var w, h, gameObj = {}, type = 'single';
 
-                gameService.getMap().then(function (data) {
-                    scope.map = data;
+                gameService.startGame(type).then(function (data) {
+                    scope.game = data;
+
+                    console.log(scope.game);
+
                     drawGame();
                     elem[0].width = scope.width;
                     elem[0].height = scope.height;
@@ -43,12 +46,8 @@ angular.module('dynablasterApp')
                 }
 
                 function handleComplete() {
-                    var ground = new GOGround(scope.map);
-                    ground.addToStage(scope.stage);
-
-                    gameObj.hero = new GOHero({x: 60, y: 40});
-                    gameObj.hero.addToStage(scope.stage);
-
+                    gameObj.map = new GOMap(scope.game.map);
+                    gameObj.map.addToStage(scope.stage);
 
                     window.onkeydown = keydown;
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -59,7 +58,9 @@ angular.module('dynablasterApp')
                 }
 
                 function keydown(event) {
-                    gameObj.hero.catchKeyCode(event.keyCode);
+                    gameObj.map.gems.forEach(function(gem) {
+                        gem.catchKeyCode(event.keyCode);
+                    });
                 }
 
                 function tick(event) {

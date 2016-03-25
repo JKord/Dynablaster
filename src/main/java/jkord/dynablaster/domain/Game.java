@@ -4,11 +4,13 @@ import java.util.stream.Collectors;
 
 public class Game {
 
+    protected String key;
     protected GameMap map;
     protected Lobby lobby;
     protected Statistics statistics;
 
-    public Game() {
+    public Game(String key) {
+        this.key = key;
         lobby = new Lobby();
     }
 
@@ -21,6 +23,14 @@ public class Game {
                 .map(lobbyUser -> lobbyUser.getUser())
                 .collect(Collectors.toSet())
         );
+    }
+
+    public void end() {
+        // TODO
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public GameMap getMap() {

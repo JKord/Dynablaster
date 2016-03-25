@@ -1,5 +1,6 @@
 package jkord.dynablaster.domain;
 
+import jkord.dynablaster.domain.piece.MapObjectType;
 import org.codehaus.jackson.annotate.JsonValue;
 
 import java.io.Serializable;
@@ -48,6 +49,7 @@ public class GameMap implements Serializable {
             mapObjects[0][i] = new MapObject(MapObjectType.FREE);
             mapObjects[VERTICAL_SIZE - 1][i] = new MapObject(MapObjectType.FREE);
         }
+        mapObjects[0][0] = new MapObject(MapObjectType.PLAYER, new PlayerObject());
 
         for (int i = 1; i < VERTICAL_SIZE; i++) {
             for (int j = 0; j < HORIZONTAL_SIZE; j++) {

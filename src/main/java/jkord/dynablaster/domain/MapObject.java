@@ -1,23 +1,23 @@
 package jkord.dynablaster.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jkord.dynablaster.domain.piece.MapObjectType;
 import java.io.Serializable;
 
-enum MapObjectType {
-    FREE,
-    BRICK,
-    WALL,
-    BOMB,
-    PLAYER,
-    MONSTER,
-    ENEMY
-}
-
 public class MapObject implements Serializable {
+
     protected MapObjectType type;
-    protected GameObject gameObject;
+
+    @JsonIgnore
+    protected IGameObject gameObject;
 
     public MapObject(MapObjectType type) {
         this.type = type;
+    }
+
+    public MapObject(MapObjectType type, IGameObject gameObject) {
+        this.type = type;
+        this.gameObject = gameObject;
     }
 
     public MapObjectType getType() {
@@ -28,11 +28,11 @@ public class MapObject implements Serializable {
         this.type = type;
     }
 
-    public GameObject getGameObject() {
+    public IGameObject getGameObject() {
         return gameObject;
     }
 
-    public void setGameObject(GameObject gameObject) {
+    public void setGameObject(IGameObject gameObject) {
         this.gameObject = gameObject;
     }
 }

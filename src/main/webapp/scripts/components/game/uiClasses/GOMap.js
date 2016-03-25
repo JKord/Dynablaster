@@ -1,5 +1,5 @@
 angular.module('dynablasterApp')
-    .factory('GOGround', ['loaderRes', function (loaderRes) {
+    .factory('GOMap', ['loaderRes', 'GOHero', function (loaderRes, GOHero) {
         function GOGround(map) {
             var self = this;
             this.img = {
@@ -15,6 +15,7 @@ angular.module('dynablasterApp')
 
             this.bricks = [];
             this.walls = [];
+            this.gems = [];
 
             var start = {x: 60, y: 40};
             this.size = {w: 40, h: 40};
@@ -34,6 +35,9 @@ angular.module('dynablasterApp')
                         case 'MONSTER': {
                             self.bricks.push(self.createGO(self.img.monster1, x, y));
                         } break;
+                        case 'PLAYER': {
+                            self.gems.push(new GOHero({x: x, y: y}));
+                        } break;
                     }
                 });
             });
@@ -41,21 +45,15 @@ angular.module('dynablasterApp')
         GOGround.prototype = {
             addToStage: function (stage) {
                 stage.addChild(this.ground);
-                this.walls.forEach(function(wall) {
-                    stage.addChild(wall);
-                });
-                this.bricks.forEach(function(brick) {
-                    stage.addChild(brick);
-                });
+                this.walls.forEach(function(wall) { stage.addChild(wall); });
+                this.bricks.forEach(function(brick) { stage.addChild(brick); });
+                this.gems.forEach(function(gem) { gem.addToStage(stage); });
             },
             removeFromStage: function (stage) {
                 stage.removeChild(this.ground);
-                this.walls.forEach(function(wall) {
-                    stage.removeChild(wall);
-                });
-                this.bricks.forEach(function(brick) {
-                    stage.addChild(brick);
-                });
+                this.walls.forEach(function(wall) { stage.removeChild(wall); });
+                this.bricks.forEach(function(brick) { stage.addChild(brick); });
+                this.gems.forEach(function(gem) { gem.removeFromStage(stage); });
             },
             createGO: function(img, x, y) {
                 var obj = new createjs.Shape();

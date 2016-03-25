@@ -38,4 +38,13 @@ public final class RandomUtil {
     public static String generateResetKey() {
         return RandomStringUtils.randomNumeric(DEF_COUNT);
     }
+
+    /**
+     * Generates a game key.
+     *
+     * @return the generated game key
+     */
+    public static String generateKeyGame() {
+        return RandomStringUtils.randomNumeric(DEF_COUNT);
+    }
 }
