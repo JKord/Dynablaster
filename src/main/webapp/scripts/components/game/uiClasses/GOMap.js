@@ -22,8 +22,8 @@ angular.module('dynablasterApp')
 
             map.forEach(function(items, i) {
                 items.forEach(function(item, j) {
-                    var x = start.x + self.size.w * j,
-                        y = start.y + self.size.h * i;
+                    var x = start.x + self.size.w * i,
+                        y = start.y + self.size.h * j;
 
                     switch (item.type) {
                         case 'WALL': {

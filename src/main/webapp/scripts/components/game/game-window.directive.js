@@ -17,6 +17,7 @@ angular.module('dynablasterApp')
                 gameService.startGame(type).then(function (data) {
                     scope.game = data;
                     gameService.socketInit(function() {
+                        gameService.sendMsg('game/start', {});
                         drawGame();
                         elem[0].width = scope.width;
                         elem[0].height = scope.height;

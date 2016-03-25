@@ -29,7 +29,7 @@ public class GameResource {
 
     @RequestMapping(value = "/start/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public GameDTO start(HttpSession session, @PathVariable String type) {
-        IGame game = gameService.getGameBySession(session);
+        IGame game = gameService.getGame(session);
         if (game == null) {
             game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
             session.setAttribute(IGame.KEY_NAME, game.getKey());

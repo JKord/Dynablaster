@@ -14,8 +14,9 @@ public class PlayerObject extends GameObject {
 
     @Override
     public void move(int x, int y) {
+        int oldX = getPosition().getX(), oldY = getPosition().getY();
         if (map.setObjToMap(new MapObject(MapObjectType.PLAYER, this), x, y)) {
-            map.setObjToMapWithoutCheck(new MapObject(MapObjectType.FREE), x, y);
+            map.setObjToMapWithoutCheck(new MapObject(MapObjectType.FREE), oldX, oldY);
             setPosition(x, y);
         }
     }

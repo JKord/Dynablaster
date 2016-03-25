@@ -22,7 +22,7 @@ public class GameMap implements Serializable {
         "1011", "1012", "912"
     );
 
-    protected MapObject mapObjects[][] = new MapObject[VERTICAL_SIZE][HORIZONTAL_SIZE];
+    protected MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
     protected Map<Long, PlayerObject> players = new HashMap<>();
 
     public GameMap() {
@@ -65,13 +65,13 @@ public class GameMap implements Serializable {
     }
 
     protected void createMap() {
-        for (int i = 0; i < HORIZONTAL_SIZE; i++) {
+        for (int i = 0; i < VERTICAL_SIZE; i++) {
             mapObjects[0][i] = new MapObject(MapObjectType.FREE);
-            mapObjects[VERTICAL_SIZE - 1][i] = new MapObject(MapObjectType.FREE);
+            mapObjects[HORIZONTAL_SIZE - 1][i] = new MapObject(MapObjectType.FREE);
         }
 
-        for (int i = 1; i < VERTICAL_SIZE; i++) {
-            for (int j = 0; j < HORIZONTAL_SIZE; j++) {
+        for (int i = 1; i < HORIZONTAL_SIZE; i++) {
+            for (int j = 0; j < VERTICAL_SIZE; j++) {
                 if (i  % 2 != 0 && j  % 2 != 0) {
                     mapObjects[i][j] = new MapObject(MapObjectType.WALL);
                 } else {
@@ -87,8 +87,8 @@ public class GameMap implements Serializable {
     private void generateRandObj(int count, MapObjectType type) {
         Random rand = new Random();
         for (int i = 0; i < count; i++) {
-            int x = rand.nextInt(VERTICAL_SIZE - 1) + 1,
-                y = rand.nextInt(HORIZONTAL_SIZE - 1) + 1;
+            int x = rand.nextInt(HORIZONTAL_SIZE - 1) + 1,
+                y = rand.nextInt(VERTICAL_SIZE - 1) + 1;
 
             if (mapObjects[x][y].getType() == MapObjectType.FREE &&
                 ! PROTECTED_AREA.contains(String.valueOf(x) + String.valueOf(y)))

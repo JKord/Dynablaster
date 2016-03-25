@@ -1,5 +1,6 @@
 package jkord.dynablaster.service;
 
+import jkord.core.domain.User;
 import jkord.core.service.UserService;
 import jkord.core.service.util.RandomUtil;
 import jkord.core.web.rest.errors.CustomParameterizedException;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class GameService {
 
     private static final Map<String, IGame> games = new HashMap<>();
+    private static final Map<String, String> usersKeys = new HashMap<>();
 
     @Inject
     private UserService userService;
@@ -32,7 +34,9 @@ public class GameService {
         switch (type) { // TODO
             case SINGLE: {
                 game = new SingleGame(key);
-                ((SingleGame) game).start(userService.getUserWithAuthorities());
+                User user = userService.getUserWithAuthorities();
+                ((SingleGame) game).start(user);
+                addUserKey(user.getLogin(), key);
             } break;
             case MULTI: {
                 game = new MultiGame(key);
@@ -53,30 +57,54 @@ public class GameService {
         games.put(game.getKey(), game);
     }
 
-    public IGame getGameByKey(String key) {
-        return games.get(key);
-    }
-
-    public IGame getGameBySession(HttpSession session) {
-        String key = String.valueOf(session.getAttribute(IGame.KEY_NAME));
-        return (key.equals("null"))? null : getGameByKey(key);
-    }
-
     public void removeGame(String key) {
         games.remove(key);
     }
 
-    public Position movePlayer(IGame game, Direction direction) {
-        PlayerObject player = game.getCurrentPlayer(userService.getUserWithAuthorities().getId());
+    public void addUserKey(String name, String key) {
+        usersKeys.put(name, key);
+    }
+
+    public String getUserKey(String name) {
+        return usersKeys.get(name);
+    }
+
+    public void removeUserKey(Long id) {
+        usersKeys.remove(id);
+    }
+
+    public IGame getGame(String key) {
+        return games.get(key);
+    }
+
+    public IGame getGame(HttpSession session) {
+        String key = String.valueOf(session.getAttribute(IGame.KEY_NAME));
+        return (key.equals("null"))? null : getGame(key);
+    }
+
+    public IGame getGameByUserName(String userName) {
+        return getGame(getUserKey(userName));
+    }
+
+    public User getUserInGamaByName(IGame game, String name) {
+        if (game instanceof SingleGame) {
+            return ((SingleGame) game).getUser();
+        }
+
+        return null;
+    }
+
+    public Position movePlayer(User user, IGame game, Direction direction) {
+        PlayerObject player = game.getCurrentPlayer(user.getId());
 
         int x = player.getPosition().getX(), y = player.getPosition().getY();
         switch (direction) {
-            case UP: x--; break;
-            case DOWN: x++; break;
-            case LEFT: y--; break;
-            case RIGHT: y++; break;
+            case UP: y--; break;
+            case DOWN: y++; break;
+            case LEFT: x--; break;
+            case RIGHT: x++; break;
         }
-        if (x > -1 && y > -1 && x < GameMap.VERTICAL_SIZE && y < GameMap.HORIZONTAL_SIZE) {
+        if (x >= 0 && y >= 0 && x < GameMap.HORIZONTAL_SIZE && y < GameMap.VERTICAL_SIZE) {
             player.move(x, y);
         }
         return player.getPosition();
