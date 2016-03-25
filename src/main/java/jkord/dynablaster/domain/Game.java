@@ -1,28 +1,25 @@
 package jkord.dynablaster.domain;
 
+import jkord.dynablaster.domain.obj.PlayerObject;
+import jkord.dynablaster.entity.Lobby;
+import jkord.dynablaster.entity.LobbyUser;
+import jkord.dynablaster.entity.Statistics;
+
 import java.util.stream.Collectors;
 
-public class Game {
+public class Game implements IGame {
 
     protected String key;
     protected GameMap map;
-    protected Lobby lobby;
+
     protected Statistics statistics;
 
     public Game(String key) {
         this.key = key;
-        lobby = new Lobby();
     }
 
     public void start() {
         map = new GameMap();
-        statistics = new Statistics(
-            lobby.lobbyUser
-                .stream()
-                .filter(LobbyUser::isActive)
-                .map(lobbyUser -> lobbyUser.getUser())
-                .collect(Collectors.toSet())
-        );
     }
 
     public void end() {
@@ -41,19 +38,15 @@ public class Game {
         this.map = map;
     }
 
-    public Lobby getLobby() {
-        return lobby;
-    }
-
-    public void setLobby(Lobby lobby) {
-        this.lobby = lobby;
-    }
-
     public Statistics getStatistics() {
         return statistics;
     }
 
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
+    }
+
+    public PlayerObject getCurrentPlayer(Long id) {
+        return map.getPlayers().get(id);
     }
 }

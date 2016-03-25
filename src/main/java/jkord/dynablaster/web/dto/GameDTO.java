@@ -1,7 +1,7 @@
 package jkord.dynablaster.web.dto;
 
-import jkord.dynablaster.domain.Game;
-import jkord.dynablaster.domain.MapObject;
+import jkord.dynablaster.domain.IGame;
+import jkord.dynablaster.domain.obj.MapObject;
 
 public class GameDTO {
     private String key;
@@ -13,7 +13,7 @@ public class GameDTO {
         this.map = mapObjects;
     }
 
-    public GameDTO(Game game) {
+    public GameDTO(IGame game) {
         this(game.getKey(), game.getMap().getMap());
     }
 

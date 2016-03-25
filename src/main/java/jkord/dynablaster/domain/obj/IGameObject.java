@@ -1,4 +1,4 @@
-package jkord.dynablaster.domain;
+package jkord.dynablaster.domain.obj;
 
 import java.io.Serializable;
 

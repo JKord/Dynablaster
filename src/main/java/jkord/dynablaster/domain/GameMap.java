@@ -1,12 +1,12 @@
 package jkord.dynablaster.domain;
 
+import jkord.dynablaster.domain.obj.MapObject;
+import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import org.codehaus.jackson.annotate.JsonValue;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameMap implements Serializable {
 
@@ -22,10 +22,10 @@ public class GameMap implements Serializable {
         "1011", "1012", "912"
     );
 
-    protected MapObject mapObjects[][];
+    protected MapObject mapObjects[][] = new MapObject[VERTICAL_SIZE][HORIZONTAL_SIZE];
+    protected Map<Long, PlayerObject> players = new HashMap<>();
 
     public GameMap() {
-        mapObjects = new MapObject[VERTICAL_SIZE][HORIZONTAL_SIZE];
         createMap();
     }
 
@@ -35,8 +35,8 @@ public class GameMap implements Serializable {
     }
 
     public boolean setObjToMap(MapObject obj, int x, int y) {
-        if (mapObjects[x][y].type == MapObjectType.FREE) {
-            mapObjects[x][y] = obj;
+        if (mapObjects[x][y].getType() == MapObjectType.FREE) {
+            setObjToMapWithoutCheck(obj, x, y);
 
             return true;
         } else {
@@ -44,12 +44,31 @@ public class GameMap implements Serializable {
         }
     }
 
+    public void setObjToMapWithoutCheck(MapObject obj, int x, int y) {
+        mapObjects[x][y] = obj;
+        switch (mapObjects[x][y].getType()) {
+            case PLAYER: {
+                PlayerObject player = (PlayerObject) mapObjects[x][y].getGameObject();
+                player.setPosition(x, y);
+                player.setMap(this);
+
+                players.put(player.getUser().getId(), player);
+            } break;
+            case MONSTER: case ENEMY: {
+                // TODO
+            } break;
+        }
+    }
+
+    public Map<Long, PlayerObject> getPlayers() {
+        return players;
+    }
+
     protected void createMap() {
         for (int i = 0; i < HORIZONTAL_SIZE; i++) {
             mapObjects[0][i] = new MapObject(MapObjectType.FREE);
             mapObjects[VERTICAL_SIZE - 1][i] = new MapObject(MapObjectType.FREE);
         }
-        mapObjects[0][0] = new MapObject(MapObjectType.PLAYER, new PlayerObject());
 
         for (int i = 1; i < VERTICAL_SIZE; i++) {
             for (int j = 0; j < HORIZONTAL_SIZE; j++) {

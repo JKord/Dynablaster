@@ -1,6 +1,7 @@
-package jkord.dynablaster.domain;
+package jkord.dynablaster.domain.obj;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jkord.dynablaster.domain.obj.IGameObject;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import java.io.Serializable;
 

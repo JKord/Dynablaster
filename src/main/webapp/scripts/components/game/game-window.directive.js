@@ -16,17 +16,15 @@ angular.module('dynablasterApp')
 
                 gameService.startGame(type).then(function (data) {
                     scope.game = data;
-
+                    gameService.socketInit(function() {
+                        drawGame();
+                        elem[0].width = scope.width;
+                        elem[0].height = scope.height;
+                        w = scope.width;
+                        h = scope.height;
+                    });
                     console.log(scope.game);
-
-                    drawGame();
-                    elem[0].width = scope.width;
-                    elem[0].height = scope.height;
-                    w = scope.width;
-                    h = scope.height;
                 });
-
-
                 function drawGame() {
                     if (scope.stage) {
                         scope.stage.autoClear = true;
@@ -38,8 +36,6 @@ angular.module('dynablasterApp')
 
                     w = scope.stage.canvas.width;
                     h = scope.stage.canvas.height;
-
-                    gameService.socketInit();
 
                     loaderRes.getLoader().addEventListener("complete", handleComplete);
                     loaderRes.loadAssets();
@@ -53,8 +49,6 @@ angular.module('dynablasterApp')
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;
                     createjs.Ticker.addEventListener("tick", tick);
                     scope.$apply();
-
-                    gameService.sendMsg({text: 'fdf'})
                 }
 
                 function keydown(event) {

@@ -1,4 +1,4 @@
-package jkord.dynablaster.domain;
+package jkord.dynablaster.entity;
 
 import jkord.core.domain.BaseEntity;
 import jkord.core.domain.User;

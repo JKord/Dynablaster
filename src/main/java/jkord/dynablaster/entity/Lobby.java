@@ -1,4 +1,4 @@
-package jkord.dynablaster.domain;
+package jkord.dynablaster.entity;
 
 import jkord.core.domain.BaseEntity;
 import jkord.core.domain.User;
@@ -27,7 +27,7 @@ public class Lobby extends BaseEntity implements Serializable {
     private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    protected Set<LobbyUser> lobbyUser = new HashSet<>(4);
+    protected Set<LobbyUser> lobbyUsers = new HashSet<>(4);
 
     public short getCountUsers() {
         return countUsers;
@@ -41,13 +41,17 @@ public class Lobby extends BaseEntity implements Serializable {
         isActive = active;
     }
 
+    public Set<LobbyUser> getUsers() {
+        return lobbyUsers;
+    }
+
     public void addUser(User user) {
         countUsers++;
-        lobbyUser.add(new LobbyUser(user));
+        lobbyUsers.add(new LobbyUser(user));
     }
 
     public void removeUser(User user) {
         countUsers--;
-        lobbyUser.remove(new LobbyUser(user));
+        lobbyUsers.remove(new LobbyUser(user));
     }
 }

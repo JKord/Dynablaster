@@ -2,8 +2,7 @@ package jkord.dynablaster.web.rest;
 
 import jkord.core.security.AuthoritiesConstants;
 import jkord.core.web.rest.errors.CustomParameterizedException;
-import jkord.dynablaster.domain.Game;
-import jkord.dynablaster.domain.MapObject;
+import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.service.GameService;
 import jkord.dynablaster.web.dto.GameDTO;
@@ -22,8 +21,6 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/game")
 public class GameResource {
 
-    private static final String GAME_KEY = "gameKey";
-
     @Inject
     private GameService gameService;
 
@@ -32,30 +29,10 @@ public class GameResource {
 
     @RequestMapping(value = "/start/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public GameDTO start(HttpSession session, @PathVariable String type) {
-
-        switch (GameType.valueOf(type.toUpperCase())) { // TODO
-            case SINGLE: {
-
-            } break;
-            case MULTI: {
-
-            } break;
-            case BOTS: {
-
-            } break;
-            default: {
-                throw new CustomParameterizedException("Game type is not supported");
-            }
-        }
-
-        Game game;
-        String key = String.valueOf(session.getAttribute(GAME_KEY));
-        if (key.equals("null") || gameService.getGameByKey(key) == null) {
-            game = gameService.createGame();
-            session.setAttribute(GAME_KEY, game.getKey());
-            game.start();
-        } else {
-            game = gameService.getGameByKey(key);
+        IGame game = gameService.getGameBySession(session);
+        if (game == null) {
+            game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
+            session.setAttribute(IGame.KEY_NAME, game.getKey());
         }
 
         return new GameDTO(game);

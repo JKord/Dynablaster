@@ -1,5 +1,5 @@
 angular.module('dynablasterApp')
-    .factory('GOHero', ['loaderRes', function (loaderRes) {
+    .factory('GOHero', ['loaderRes', 'gameService', function (loaderRes, gameService) {
         function GOHero(obj) {
             this.img = {
                 up: loaderRes.getResult("heroUp"),
@@ -7,14 +7,25 @@ angular.module('dynablasterApp')
                 left: loaderRes.getResult("heroLeft"),
                 right: loaderRes.getResult("heroRight")
             };
+            this.currentImg = null;
 
             this.step = 40;
             this.size = {w: 34, h: 40};
+            this.start = {x: 60, y: 40};
 
             this.player = new createjs.Shape();
             this.setImg(this.img.down);
             this.player.x = obj.x;
             this.player.y = obj.y;
+
+            var self = this;
+            gameService.stompClient.subscribe('/game/hero/move', function(message){
+                var position = JSON.parse(message.body);
+                console.log(position);
+
+                self.setImg(self.currentImg);
+                self.moveTo(position.x * self.step, position.y * self.step);
+            });
         }
         GOHero.prototype = {
             addToStage: function (stage) {
@@ -28,34 +39,43 @@ angular.module('dynablasterApp')
             getY: function () { return this.player.y; },
             setY: function (val) { this.player.y =  val; },
             moveTo: function (x, y) {
-                this.player.x = this.player.x + x;
-                this.player.y = this.player.y + y;
+                this.player.x = this.start.x + x;
+                this.player.y = this.start.y + y;
             },
             setImg: function(img) {
                 this.player.graphics.clear();
                 this.player.graphics.beginBitmapFill(img).drawRect(0, 0, this.size.w, this.size.h);
             },
             catchKeyCode: function(keyCode) {
+                var img, pos, direction;
                 switch (keyCode) {
                     case 38: case 87: { // Up
-                        this.setImg(this.img.up);
-                        this.moveTo(0, -this.step);
+                        img = this.img.up;
+                        //pos = {x: 0, y: -this.step};
+                        direction = 'up';
                     } break;
                     case 40: case 83: { // Down
-                        this.setImg(this.img.down);
-                        this.moveTo(0, this.step);
+                        img = this.img.down;
+                        //pos = {x: 0, y: this.step};
+                        direction = 'down';
                     } break;
                     case 37: case 65: { // Left
-                        this.setImg(this.img.left);
-                        this.moveTo(-this.step, 0);
+                        img = this.img.left;
+                        //pos = {x: -this.step, y: 0};
+                        direction = 'left';
                     } break;
                     case 39: case 68: { // Right
-                        this.setImg(this.img.right);
-                        this.moveTo(this.step, 0);
+                        img = this.img.right;
+                        //pos = {x: this.step, y: 0};
+                        direction = 'right';
                     } break;
                     case 32: { // TODO: Bomb
                         alert('Burst!');
                     } break;
+                }
+                if (direction) {
+                    gameService.sendMsg('player/move', { direction: direction });
+                    this.currentImg = img;
                 }
             }
         };
