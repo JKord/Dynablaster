@@ -2,12 +2,15 @@ package jkord.core.service.util;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.util.UUID;
+
 /**
  * Utility class for generating random Strings.
  */
 public final class RandomUtil {
 
     private static final int DEF_COUNT = 20;
+    private static int idCounter = 0;
 
     private RandomUtil() {
     }
@@ -45,6 +48,15 @@ public final class RandomUtil {
      * @return the generated game key
      */
     public static String generateKeyGame() {
-        return RandomStringUtils.randomNumeric(DEF_COUNT);
+        return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Generates a ID.
+     *
+     * @return the generated ID
+     */
+    public static synchronized int generateId() {
+        return idCounter++;
     }
 }

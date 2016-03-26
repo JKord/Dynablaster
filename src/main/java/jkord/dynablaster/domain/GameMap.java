@@ -1,5 +1,8 @@
 package jkord.dynablaster.domain;
 
+import jkord.core.service.util.RandomUtil;
+import jkord.dynablaster.domain.obj.BotObject;
+import jkord.dynablaster.domain.obj.IGameObject;
 import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.MapObjectType;
@@ -24,6 +27,7 @@ public class GameMap implements Serializable {
 
     protected MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
     protected Map<Long, PlayerObject> players = new HashMap<>();
+    protected List<BotObject> bots = new ArrayList<>();
 
     public GameMap() {
         createMap();
@@ -32,6 +36,14 @@ public class GameMap implements Serializable {
     @JsonValue
     public MapObject[][] getMap() {
         return mapObjects;
+    }
+
+    public Map<Long, PlayerObject> getPlayers() {
+        return players;
+    }
+
+    public List<BotObject> getBots() {
+        return bots;
     }
 
     public boolean setObjToMap(MapObject obj, int x, int y) {
@@ -45,23 +57,26 @@ public class GameMap implements Serializable {
     }
 
     public void setObjToMapWithoutCheck(MapObject obj, int x, int y) {
-        mapObjects[x][y] = obj;
-        switch (mapObjects[x][y].getType()) {
+        IGameObject gameObj = obj.getGameObject();
+        switch (obj.getType()) {
             case PLAYER: {
-                PlayerObject player = (PlayerObject) mapObjects[x][y].getGameObject();
-                player.setPosition(x, y);
-                player.setMap(this);
-
+                PlayerObject player = (PlayerObject) gameObj;
                 players.put(player.getUser().getId(), player);
             } break;
             case MONSTER: case ENEMY: {
-                // TODO
+                gameObj = new BotObject();
+                bots.add((BotObject) gameObj);
             } break;
         }
-    }
+        if (gameObj != null) {
+            gameObj.setPosition(x, y);
+            gameObj.setMap(this);
 
-    public Map<Long, PlayerObject> getPlayers() {
-        return players;
+            if (obj.getId() == -1) {
+                obj.setId(RandomUtil.generateId());
+            }
+        }
+        mapObjects[x][y] = obj;
     }
 
     protected void createMap() {
@@ -93,7 +108,7 @@ public class GameMap implements Serializable {
             if (mapObjects[x][y].getType() == MapObjectType.FREE &&
                 ! PROTECTED_AREA.contains(String.valueOf(x) + String.valueOf(y)))
             {
-                mapObjects[x][y] = new MapObject(type);
+                setObjToMapWithoutCheck(new MapObject(type), x, y);
             } else {
                 i--;
             }

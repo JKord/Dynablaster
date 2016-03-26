@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class MapObject implements Serializable {
 
+    protected int id = -1;
     protected MapObjectType type;
 
     @JsonIgnore
@@ -19,6 +20,14 @@ public class MapObject implements Serializable {
     public MapObject(MapObjectType type, IGameObject gameObject) {
         this.type = type;
         this.gameObject = gameObject;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public MapObjectType getType() {

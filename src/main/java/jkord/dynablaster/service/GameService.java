@@ -5,11 +5,9 @@ import jkord.core.service.UserService;
 import jkord.core.service.util.RandomUtil;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.*;
-import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
 import org.springframework.stereotype.Service;
 
@@ -94,19 +92,10 @@ public class GameService {
         return null;
     }
 
-    public Position movePlayer(User user, IGame game, Direction direction) {
+    public Position movePlayer(User user, IGame game, String direction) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
+        player.move(Direction.valueOf(direction.toUpperCase()));
 
-        int x = player.getPosition().getX(), y = player.getPosition().getY();
-        switch (direction) {
-            case UP: y--; break;
-            case DOWN: y++; break;
-            case LEFT: x--; break;
-            case RIGHT: x++; break;
-        }
-        if (x >= 0 && y >= 0 && x < GameMap.HORIZONTAL_SIZE && y < GameMap.VERTICAL_SIZE) {
-            player.move(x, y);
-        }
         return player.getPosition();
     }
 }

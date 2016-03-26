@@ -3,6 +3,7 @@ package jkord.dynablaster.web.rest;
 import jkord.core.security.AuthoritiesConstants;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.IGame;
+import jkord.dynablaster.domain.obj.BotObject;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.service.GameService;
 import jkord.dynablaster.web.dto.GameDTO;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.util.ArrayList;
 
 @RestController
 @Secured(AuthoritiesConstants.USER)
@@ -34,6 +37,11 @@ public class GameResource {
             game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
             session.setAttribute(IGame.KEY_NAME, game.getKey());
         }
+
+        BotObject bot = game.getMap().getBots().get(0);
+
+        bot.move(6, 6);
+        ArrayList<Point> path = bot.getPathToGo();
 
         return new GameDTO(game);
     }

@@ -22,6 +22,7 @@ angular.module('dynablasterApp')
             gameService.stompClient.subscribe('/game/hero/move', function(message){
                 var position = JSON.parse(message.body);
                 console.log(position);
+                console.log(34);
 
                 self.setImg(self.currentImg);
                 self.moveTo(position.x * self.step, position.y * self.step);
@@ -47,26 +48,22 @@ angular.module('dynablasterApp')
                 this.player.graphics.beginBitmapFill(img).drawRect(0, 0, this.size.w, this.size.h);
             },
             catchKeyCode: function(keyCode) {
-                var img, pos, direction;
+                var img, direction;
                 switch (keyCode) {
                     case 38: case 87: { // Up
                         img = this.img.up;
-                        //pos = {x: 0, y: -this.step};
                         direction = 'up';
                     } break;
                     case 40: case 83: { // Down
                         img = this.img.down;
-                        //pos = {x: 0, y: this.step};
                         direction = 'down';
                     } break;
                     case 37: case 65: { // Left
                         img = this.img.left;
-                        //pos = {x: -this.step, y: 0};
                         direction = 'left';
                     } break;
                     case 39: case 68: { // Right
                         img = this.img.right;
-                        //pos = {x: this.step, y: 0};
                         direction = 'right';
                     } break;
                     case 32: { // TODO: Bomb
