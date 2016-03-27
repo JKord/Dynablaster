@@ -32,9 +32,7 @@ angular.module('dynablasterApp')
             },
             stompSubscribe: function(name, action) {
                 this.stompClient.subscribe(name, function(msg){
-                    var msg = JSON.parse(msg.body);
-                    console.log(msg);
-                    action(msg);
+                    action(JSON.parse(msg.body));
                 });
             }
         }

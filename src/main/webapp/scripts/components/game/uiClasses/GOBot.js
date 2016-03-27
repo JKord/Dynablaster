@@ -34,7 +34,6 @@ angular.module('dynablasterApp')
                         self.pathToGoI = 0;
                         setTimeout(function() {
                             self.newPath();
-                            console.log('newPath');
                         }, 2000);
                     }
                 }

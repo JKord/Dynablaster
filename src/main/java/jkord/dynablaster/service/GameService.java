@@ -109,7 +109,7 @@ public class GameService {
         }
 
         Position pos = GameMap.getRandPosition();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             if (game.getMap().isFreePosition(pos.getX(), pos.getY()))
                 break;
             pos = GameMap.getRandPosition();
