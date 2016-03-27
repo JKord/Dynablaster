@@ -1,16 +1,26 @@
 <div ng-cloak>
     <div class="row">
-        <div class="col-md-4"></div>
+        <div class="col-md-2"></div>
         <div class="col-md-8">
-            <h1>Welcome!</h1>
+            <h1>Welcome to Dynablaster!</h1>
 
             <div ng-switch="isAuthenticated()">
                 <div class="alert alert-success" ng-switch-when="true">
                     You are logged in as user "{{account.login}}".
                 </div>
 
+                <div class="panel panel-default" ng-switch-when="true">
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked nav-center">
+                            <li role="presentation"><a ui-sref="game({type:'single'})">Single player</a></li>
+                            <li role="presentation"><a ui-sref="game({type:'multi'})">Multi player</a></li>
+                            <li role="presentation"><a ui-sref="game({type:'bots'})">Play with bots</a></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="alert alert-warning" ng-switch-when="false">
-                    If you want to <a class="alert-link" href="#/login">sign in</a>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
+                    If you want to start the game you need <a class="alert-link" href="#/login">sign in</a> or can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
                 </div>
 
                 <div class="alert alert-warning" ng-switch-when="false">

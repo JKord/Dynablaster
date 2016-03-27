@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>pssn</title>
+        <title>Dynablaster</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
         <!-- build:css assets/styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
@@ -16,17 +16,19 @@
         <link rel="stylesheet" href="assets/styles/main.css">
         <!-- endbuild -->
     </head>
-    <body ng-app="pssnApp">
+    <body ng-app="dynablasterApp">
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div ng-show="{{ENV === 'dev'}}" class="development" ng-cloak=""></div>
         <div ui-view="navbar" ng-cloak=""></div>
         <div class="container">
             <div class="well" ui-view="content"></div>
 
             <div class="footer">
-                <p translate="footer">PSSN 2016 &copy;</p>
+                <p translate="footer">
+                    Dynablaster 2016 &copy;
+                    <span ng-show="{{ENV === 'dev'}}" ng-cloak=""> - dev</span>
+                </p>
             </div>
         </div>
 
@@ -47,9 +49,15 @@
         <script src="bower_components/json3/lib/json3.js"></script>
         <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
         <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+        <script src="bower_components/sockjs-client/dist/sockjs.js"></script>
+        <script src="bower_components/sockjs/sockjs.js"></script>
+        <script src="bower_components/ng-stomp/src/ng-stomp.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
+        <script src="bower_components/sockjs-client/dist/sockjs-1.0.3.min.js"></script>
+        <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+        <script src="scripts/libs/createjs.min.js"></script>
 
         <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
         <script src="scripts/app/app.js"></script>
@@ -76,7 +84,6 @@
         <script src="scripts/components/navbar/navbar.directive.js"></script>
         <script src="scripts/components/navbar/navbar.controller.js"></script>
         <script src="scripts/components/user/user.service.js"></script>
-        <script src="scripts/components/user/sn.service.js"></script>
         <script src="scripts/components/util/truncate.filter.js"></script>
         <script src="scripts/components/util/base64.service.js"></script>
         <script src="scripts/components/util/capitalize.filter.js"></script>
@@ -86,6 +93,16 @@
         <script src="scripts/components/util/date-util.service.js"></script>
         <script src="scripts/components/util/data-util.service.js"></script>
         <script src="scripts/components/util/sort.directive.js"></script>
+
+        <script src="scripts/components/game/uiClasses/GObj.js"></script>
+        <script src="scripts/components/game/uiClasses/GOBot.js"></script>
+        <script src="scripts/components/game/uiClasses/GOHero.js"></script>
+        <script src="scripts/components/game/uiClasses/GOMap.js"></script>
+        <script src="scripts/components/game/loaderRes.service.js"></script>
+        <script src="scripts/components/game/game.service.js"></script>
+        <script src="scripts/components/game/game-window.directive.js"></script>
+        <script src="scripts/components/game/game-window.controller.js"></script>
+
         <script src="scripts/app/account/account.js"></script>
         <script src="scripts/app/account/activate/activate.js"></script>
         <script src="scripts/app/account/activate/activate.controller.js"></script>
@@ -121,7 +138,6 @@
         <script src="scripts/app/admin/user-management/user-management-delete-dialog.controller.js"></script>
         <script src="scripts/app/admin/user-management/user-management.controller.js"></script>
         <script src="scripts/app/admin/user-management/user-management.js"></script>
-        <script src="scripts/app/entities/entity.js"></script>
         <script src="scripts/app/error/error.js"></script>
         <script src="scripts/app/main/main.js"></script>
         <script src="scripts/app/main/main.controller.js"></script>
@@ -133,8 +149,8 @@
         <script src="scripts/components/auth/provider/auth.session.service.js"></script>
         <script src="scripts/app/account/sessions/sessions.js"></script>
         <script src="scripts/app/account/sessions/sessions.controller.js"></script>
-        <script src="scripts/app/import/import.js"></script>
-        <script src="scripts/app/import/import.controller.js"></script>
+        <script src="scripts/app/game/game.js"></script>
+        <script src="scripts/app/game/game.controller.js"></script>
     <!-- endbuild -->
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 describe('Controller Tests', function () {
 
-    beforeEach(module('pssnApp'));
+    beforeEach(module('dynablasterApp'));
 
     describe('LoginController', function () {
         var $scope;

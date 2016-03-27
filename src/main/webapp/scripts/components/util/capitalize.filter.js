@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .filter('capitalize', function () {
         return function (input, scope) {
             if (input != null)

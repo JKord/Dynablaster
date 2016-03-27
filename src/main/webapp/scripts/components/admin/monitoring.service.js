@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('MonitoringService', function ($rootScope, $http) {
         return {
             getMetrics: function () {

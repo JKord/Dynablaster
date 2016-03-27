@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('Principal', function Principal($q, Account) {
         var _identity,
             _authenticated = false;

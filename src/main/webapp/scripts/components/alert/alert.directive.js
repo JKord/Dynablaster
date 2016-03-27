@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .directive('jhAlert', function(AlertService) {
         return {
             restrict: 'E',
@@ -32,7 +32,7 @@ angular.module('pssnApp')
 
                     $scope.alerts = [];
 
-                    var cleanHttpErrorListener = $rootScope.$on('pssnApp.httpError', function (event, httpResponse) {
+                    var cleanHttpErrorListener = $rootScope.$on('dynablasterApp.httpError', function (event, httpResponse) {
                         var i;
                         event.stopPropagation();
                         switch (httpResponse.status) {
@@ -42,8 +42,8 @@ angular.module('pssnApp')
                                 break;
 
                             case 400:
-                                var errorHeader = httpResponse.headers('X-pssnApp-error');
-                                var entityKey = httpResponse.headers('X-pssnApp-params');
+                                var errorHeader = httpResponse.headers('X-dynablasterApp-error');
+                                var entityKey = httpResponse.headers('X-dynablasterApp-params');
                                 if (errorHeader) {
                                     var entityName = entityKey;
                                     addErrorAlert(errorHeader, errorHeader, {entityName: entityName});

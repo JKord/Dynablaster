@@ -10,15 +10,11 @@
 
     <property name="autoIncrement" value="true" dbms="mysql,h2,postgresql,oracle"/>
 
-    <changeSet id="00000000000000" author="jhipster" dbms="postgresql,oracle">
+    <changeSet id="00000000000000" author="Ano" dbms="postgresql,oracle">
         <createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="1"/>
     </changeSet>
 
-    <!--
-        JHipster core tables.
-        The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
-    -->
-    <changeSet id="00000000000001" author="jhipster">
+    <changeSet id="00000000000001" author="Ano">
         <createTable tableName="user">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
@@ -171,37 +167,110 @@
                                  referencedColumnNames="event_id"
                                  referencedTableName="persistent_audit_event"/>
 
-    <!-- Social -->
-    <createTable tableName="social_user_connection">
-        <column name="id" type="bigint" autoIncrement="${autoIncrement}">
-            <constraints primaryKey="true" nullable="false"/>
-        </column>
-        <column name="user_id" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="provider_id" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="provider_user_id" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="rank" type="bigint">
-            <constraints nullable="false"/>
-        </column>
-        <column name="display_name" type="varchar(255)"/>
-        <column name="profile_url" type="varchar(255)"/>
-        <column name="image_url" type="varchar(255)"/>
-        <column name="access_token" type="varchar(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="secret" type="varchar(255)"/>
-        <column name="refresh_token" type="varchar(255)"/>
-        <column name="expire_time" type="bigint"/>
-    </createTable>
+        <!-- Social -->
+        <createTable tableName="social_user_connection">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_user_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_name" type="varchar(255)"/>
+            <column name="profile_url" type="varchar(255)"/>
+            <column name="image_url" type="varchar(255)"/>
+            <column name="access_token" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="secret" type="varchar(255)"/>
+            <column name="refresh_token" type="varchar(255)"/>
+            <column name="expire_time" type="bigint"/>
+        </createTable>
 
-    <addUniqueConstraint tableName="social_user_connection" columnNames="user_id, provider_id, provider_user_id"/>
+        <addUniqueConstraint tableName="social_user_connection" columnNames="user_id, provider_id, provider_user_id"/>
 
-    <addUniqueConstraint tableName="social_user_connection" columnNames="user_id, provider_id, rank"/>
+        <addUniqueConstraint tableName="social_user_connection" columnNames="user_id, provider_id, rank"/>
+
+        <createTable tableName="lobby">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="count_users" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean" valueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lobby_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lobby_user">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean" valueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="statistics">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_won_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="text"/>
+        </createTable>
+
+        <createTable tableName="statistics_users">
+            <column name="statistics_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="lobby_user_id"
+                                 baseTableName="lobby"
+                                 constraintName="fk_lobby_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lobby_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_won_id"
+                                 baseTableName="statistics"
+                                 constraintName="fk_statistics_users"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="statistics_id"
+                                 baseTableName="statistics_users"
+                                 constraintName="fk_statistics_users_statistics"
+                                 referencedColumnNames="id"
+                                 referencedTableName="statistics"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="statistics_users"
+                                 constraintName="fk_statistics_users_users"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
 
     </changeSet>
 

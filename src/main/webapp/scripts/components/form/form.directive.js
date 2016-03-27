@@ -1,7 +1,7 @@
 /* globals $ */
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .directive('showValidation', function() {
         return {
             restrict: 'A',

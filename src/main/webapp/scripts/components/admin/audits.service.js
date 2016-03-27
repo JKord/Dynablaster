@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .factory('AuditsService', function ($http) {
         return {
             findAll: function () {

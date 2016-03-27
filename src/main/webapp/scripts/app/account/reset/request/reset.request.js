@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pssnApp')
+angular.module('dynablasterApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('requestReset', {
@@ -16,7 +16,7 @@ angular.module('pssnApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             });
     });
