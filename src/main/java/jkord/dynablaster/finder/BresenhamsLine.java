@@ -1,15 +1,15 @@
 package jkord.dynablaster.finder;
 
-import java.awt.*;
+import jkord.dynablaster.domain.piece.Position;
 import java.util.ArrayList;
 
 public class BresenhamsLine {
-	public static ArrayList<Point> getPointsOnLine(Point p1, Point p2) {
+	public static ArrayList<Position> getPointsOnLine(Position p1, Position p2) {
 
-		Point a = (Point) p1.clone();
-		Point b = (Point) p2.clone();
+		Position a = p1.clone();
+		Position b = p2.clone();
 
-		ArrayList<Point> pointsOnLine = new ArrayList<Point>();
+		ArrayList<Position> pointsOnLine = new ArrayList<Position>();
 
 		boolean steep = Math.abs(b.y - a.y) > Math.abs(b.x - a.x);
 
@@ -49,9 +49,9 @@ public class BresenhamsLine {
 
 		for(int x=a.x; x<=b.x; x++) {
 			if(steep)
-				pointsOnLine.add(new Point(y,x));
+				pointsOnLine.add(new Position(y,x));
 			else
-				pointsOnLine.add(new Point(x,y));
+				pointsOnLine.add(new Position(x,y));
 			error = error - deltaY;
 			if(error<0) {
 				y = y + yStep;

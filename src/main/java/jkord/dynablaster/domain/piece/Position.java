@@ -1,6 +1,6 @@
 package jkord.dynablaster.domain.piece;
 
-public class Position {
+public class Position implements Cloneable {
     public int x;
     public int y;
 
@@ -44,5 +44,9 @@ public class Position {
 
     public String toString() {
         return getClass().getName() + "[x=" + x + ",y=" + y + "]";
+    }
+
+    public Position clone() {
+        return new Position(x, y);
     }
 }

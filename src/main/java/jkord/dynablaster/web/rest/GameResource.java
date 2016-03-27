@@ -38,11 +38,6 @@ public class GameResource {
             session.setAttribute(IGame.KEY_NAME, game.getKey());
         }
 
-        BotObject bot = game.getMap().getBots().get(0);
-
-        bot.move(6, 6);
-        ArrayList<Point> path = bot.getPathToGo();
-
         return new GameDTO(game);
     }
 

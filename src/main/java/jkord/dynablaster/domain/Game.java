@@ -7,7 +7,7 @@ import jkord.dynablaster.entity.Statistics;
 
 import java.util.stream.Collectors;
 
-public class Game implements IGame {
+abstract class Game implements IGame {
 
     protected String key;
     protected GameMap map;

@@ -21,14 +21,21 @@ angular.module('dynablasterApp')
                     connect();
                 });
             },
-            sendMsg: function(name, data) {
-                this.stompClient.send('/app/' + name, {}, JSON.stringify(data));
-            },
             socketClose: function() {
                 if (this.stompClient != null) {
                     this.stompClient.disconnect();
                     sock.close();
                 }
+            },
+            sendMsg: function(name, data) {
+                this.stompClient.send('/app/' + name, {}, JSON.stringify(data));
+            },
+            stompSubscribe: function(name, action) {
+                this.stompClient.subscribe(name, function(msg){
+                    var msg = JSON.parse(msg.body);
+                    console.log(msg);
+                    action(msg);
+                });
             }
         }
     });

@@ -1,10 +1,9 @@
 package jkord.dynablaster.finder.utils;
 
+import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.AreaMap;
 import jkord.dynablaster.finder.Node;
 import jkord.dynablaster.finder.Path;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 public class PrintMap {
@@ -45,7 +44,7 @@ public class PrintMap {
 			System.out.print("-");
 	}
 
-	public PrintMap(AreaMap map, ArrayList<Point> shortestPath) {
+	public PrintMap(AreaMap map, ArrayList<Position> shortestPath) {
 		Node node;
 		for(int y=0; y<map.getMapHeight(); y++) {
 
@@ -66,7 +65,7 @@ public class PrintMap {
 					System.out.print("s");
 				} else if(node.isGoal) {
 					System.out.print("g");
-				} else if (shortestPath.contains(new Point(node.getX(), node.getY()))) {
+				} else if (shortestPath.contains(new Position(node.getX(), node.getY()))) {
 					System.out.print("*");
 				} else {
 					System.out.print(" ");

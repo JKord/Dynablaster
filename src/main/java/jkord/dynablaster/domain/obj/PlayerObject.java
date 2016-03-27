@@ -11,17 +11,7 @@ public class PlayerObject extends GameObject {
 
     public PlayerObject(User user) {
         this.user = user;
-    }
-
-    @Override
-    public void move(int x, int y) {
-        if (x >= 0 && y >= 0 && x < GameMap.HORIZONTAL_SIZE && y < GameMap.VERTICAL_SIZE) {
-            int oldX = position.x, oldY = position.y;
-            if (map.setObjToMap(new MapObject(MapObjectType.PLAYER, this), x, y)) {
-                map.setObjToMapWithoutCheck(new MapObject(MapObjectType.FREE), oldX, oldY);
-                setPosition(x, y);
-            }
-        }
+        this.type = MapObjectType.PLAYER;
     }
 
     public void move(Direction direction) {

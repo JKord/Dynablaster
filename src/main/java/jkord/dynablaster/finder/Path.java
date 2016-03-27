@@ -1,6 +1,6 @@
 package jkord.dynablaster.finder;
 
-import java.awt.*;
+import jkord.dynablaster.domain.piece.Position;
 import java.util.ArrayList;
 
 public class Path {
@@ -18,8 +18,8 @@ public class Path {
 		return waypoints.get(index);
 	}
 
-	public Point getWayPoint(int index) {
-		return new Point(waypoints.get(index).getX(), waypoints.get(index).getY());
+	public Position getWayPoint(int index) {
+		return new Position(waypoints.get(index).getX(), waypoints.get(index).getY());
 	}
 
 	/**

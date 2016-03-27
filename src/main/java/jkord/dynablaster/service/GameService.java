@@ -5,6 +5,7 @@ import jkord.core.service.UserService;
 import jkord.core.service.util.RandomUtil;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.*;
+import jkord.dynablaster.domain.obj.BotObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,5 +99,23 @@ public class GameService {
         player.move(Direction.valueOf(direction.toUpperCase()));
 
         return player.getPosition();
+    }
+
+    public ArrayList<Position> moveBot(IGame game, int id) {
+        BotObject bot = game.getMap().getBots().get(id);
+        if (bot.getPathToGo() != null) {
+            Position oldPoz = bot.getPathToGo().get(bot.getPathToGo().size() - 1);
+            bot.move(oldPoz.getX(), oldPoz.getY());
+        }
+
+        Position pos = GameMap.getRandPosition();
+        for (int i = 0; i < 3; i++) {
+            if (game.getMap().isFreePosition(pos.getX(), pos.getY()))
+                break;
+            pos = GameMap.getRandPosition();
+        }
+        bot.movePath(pos.getX(), pos.getY());
+
+        return bot.getPathToGo();
     }
 }

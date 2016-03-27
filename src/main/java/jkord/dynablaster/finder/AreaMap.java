@@ -2,11 +2,9 @@ package jkord.dynablaster.finder;
 
 import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.obj.MapObject;
-import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.MapObjectType;
+import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.utils.Logger;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -63,7 +61,22 @@ public class AreaMap {
      * @param gameMap GameMap
      */
     public AreaMap(GameMap gameMap) {
-        this(GameMap.HORIZONTAL_SIZE, GameMap.VERTICAL_SIZE, gameMap.getMap());
+        this.mapWith = GameMap.HORIZONTAL_SIZE;
+        this.mapHeight = GameMap.VERTICAL_SIZE;
+        this.obstacleMap = transpone(gameMap.getMap());
+        createMap();
+        log.addToLog("\tMap Created");
+    }
+
+    private MapObject[][] transpone(MapObject[][] o)  {
+        MapObject[][] tmp = new MapObject[o[0].length][o.length];
+        for (int i = 0; i < o[0].length; i++) {
+            for (int j = 0; j < o.length; j++) {
+                tmp[i][j] = o[j][i];
+            }
+        }
+
+        return tmp;
     }
 
 	/**
@@ -131,8 +144,8 @@ public class AreaMap {
 		return goalLocationY;
 	}
 
-	public Point getGoalPoint() {
-		return new Point(goalLocationX, goalLocationY);
+	public Position getGoalPoint() {
+		return new Position(goalLocationX, goalLocationY);
 	}
 
 	/**

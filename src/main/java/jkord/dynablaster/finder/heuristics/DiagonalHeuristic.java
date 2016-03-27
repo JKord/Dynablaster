@@ -1,6 +1,6 @@
 package jkord.dynablaster.finder.heuristics;
 
-import java.awt.*;
+import jkord.dynablaster.domain.piece.Position;
 
 /**
  * Calculate the diagonal distance to goal when
@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class DiagonalHeuristic implements AStarHeuristic {
 
-	public float getEstimatedDistanceToGoal(Point start, Point goal) {
+	public float getEstimatedDistanceToGoal(Position start, Position goal) {
 
 		float h_diagonal = (float) Math.min(Math.abs(start.x-goal.x), Math.abs(start.y-goal.y));
 		float h_straight = (float) (Math.abs(start.x-goal.x) + Math.abs(start.y-goal.y));

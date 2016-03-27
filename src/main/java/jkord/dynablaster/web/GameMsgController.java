@@ -2,8 +2,8 @@ package jkord.dynablaster.web;
 
 import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.web.dto.BotMsg;
 import jkord.dynablaster.web.dto.DirectionMsg;
-import jkord.core.domain.User;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -31,11 +31,8 @@ public class GameMsgController extends BaseGameController{
 
     @MessageMapping("/bot/move")
     @SendTo("/game/bot/move")
-    public void moveBot(SimpMessageHeaderAccessor headerAccessor) {
-        IGame game = getGame(headerAccessor);
-        User user = getUser(headerAccessor);
-
-
-
+    public BotMsg moveBot(SimpMessageHeaderAccessor headerAccessor, BotMsg botMsg) {
+        botMsg.setPath(gameService.moveBot(getGame(headerAccessor), botMsg.getId()));
+        return botMsg;
     }
 }

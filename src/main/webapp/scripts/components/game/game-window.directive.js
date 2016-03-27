@@ -57,9 +57,22 @@ angular.module('dynablasterApp')
                         gem.catchKeyCode(event.keyCode);
                     });
                 }
+                function update(event) {
 
+                }
+
+                var time = 1;
                 function tick(event) {
-                    var deltaS = event.delta / 1000;
+                    var deltaS = event.delta / 1000,
+                        deltaT = event.delta / 1000 * 1000 >> 1;
+
+                    if (time < event.timeStamp) {
+                        time = event.timeStamp + 1100;
+                        gameObj.map.update();
+                    }
+
+                    /*if (deltaT == 15)
+                        gameObj.map.update();*/
 
                     //var position = grant.getX() + 150 * deltaS;
                     /*grant.setX((position >= w + grant.getWidth()) ? -grant.getWidth() : position);

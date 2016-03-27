@@ -1,11 +1,10 @@
 package jkord.dynablaster.finder;
 
+import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.heuristics.AStarHeuristic;
 import jkord.dynablaster.finder.heuristics.DiagonalHeuristic;
 import jkord.dynablaster.finder.utils.Logger;
 import jkord.dynablaster.finder.utils.StopWatch;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 public class PathFinder {
@@ -14,7 +13,7 @@ public class PathFinder {
 	Logger log = new Logger();
     StopWatch s = new StopWatch();
 
-	public ArrayList<Point> getWaypoints(AreaMap map) {
+	public ArrayList<Position> getWaypoints(AreaMap map) {
 		this.map = map;
 
 		log.addToLog("AStar Heuristic initializing...");
@@ -24,7 +23,7 @@ public class PathFinder {
 		AStar aStar = new AStar(map, heuristic);
 
 		log.addToLog("Calculating shortest path with AStar...");
-		ArrayList<Point> shortestPath = aStar.calcShortestPath(
+		ArrayList<Position> shortestPath = aStar.calcShortestPath(
             map.getStartLocationX(),
             map.getStartLocationY(),
             map.getGoalLocationX(),
@@ -36,24 +35,24 @@ public class PathFinder {
 
 		log.addToLog("Calculating optimized waypoints...");
         s.start();
-		ArrayList<Point> waypoints = calculateWayPoints(shortestPath);
+		ArrayList<Position> waypoints = calculateWayPoints(shortestPath);
         s.stop();
 		log.addToLog("Time to calculate waypoints: " + s.getElapsedTime() + " ms");
 
 		return waypoints;
 	}
 
-	private ArrayList<Point> calculateWayPoints(ArrayList<Point> shortestPath) {
-		ArrayList<Point> waypoints = new ArrayList<>();
+	private ArrayList<Position> calculateWayPoints(ArrayList<Position> shortestPath) {
+		ArrayList<Position> waypoints = new ArrayList<>();
 
-		shortestPath.add(0,map.getStartNode().getPoint());
+		shortestPath.add(0, map.getStartNode().getPoint());
 		shortestPath.add(map.getGoalNode().getPoint());
 
-		Point p1 = shortestPath.get(0);
+        Position p1 = shortestPath.get(0);
 		int p1Number = 0;
 		waypoints.add(p1);
 
-		Point p2 = shortestPath.get(1);
+        Position p2 = shortestPath.get(1);
 		int p2Number = 1;
 
 		while(!p2.equals(shortestPath.get(shortestPath.size()-1))) {
@@ -75,9 +74,9 @@ public class PathFinder {
 		return waypoints;
 	}
 
-	private boolean lineClear(Point a, Point b) {
-		ArrayList<Point> pointsOnLine = BresenhamsLine.getPointsOnLine(a, b);
-		for(Point p : pointsOnLine) {
+	private boolean lineClear(Position a, Position b) {
+		ArrayList<Position> pointsOnLine = BresenhamsLine.getPointsOnLine(a, b);
+		for(Position p : pointsOnLine) {
 			if(map.getNode(p.x, p.y).isObstacle) {
 				return false;
 			}

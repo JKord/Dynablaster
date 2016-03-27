@@ -1,6 +1,6 @@
 package jkord.dynablaster.finder;
 
-import java.awt.*;
+import jkord.dynablaster.domain.piece.Position;
 import java.util.ArrayList;
 
 public class Node implements Comparable<Node> {
@@ -116,8 +116,8 @@ public class Node implements Comparable<Node> {
 		this.y = y;
 	}
 
-	public Point getPoint() {
-		return new Point(x,y);
+	public Position getPoint() {
+		return new Position(x,y);
 	}
 
 	public boolean isObstical() {

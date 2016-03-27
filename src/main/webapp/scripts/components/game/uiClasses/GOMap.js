@@ -1,5 +1,5 @@
 angular.module('dynablasterApp')
-    .factory('GOMap', ['loaderRes', 'GOHero', function (loaderRes, GOHero) {
+    .factory('GOMap', function (loaderRes, GOHero, GOBot) {
         function GOGround(map) {
             var self = this;
             this.img = {
@@ -15,6 +15,7 @@ angular.module('dynablasterApp')
 
             this.bricks = [];
             this.walls = [];
+            this.bots = [];
             this.gems = [];
 
             var start = {x: 60, y: 40};
@@ -33,7 +34,7 @@ angular.module('dynablasterApp')
                             self.bricks.push(self.createGO(self.img.brick, x, y));
                         } break;
                         case 'MONSTER': {
-                            self.bricks.push(self.createGO(self.img.monster1, x, y));
+                            self.bots.push(new GOBot({x: x, y: y}, item.id));
                         } break;
                         case 'PLAYER': {
                             self.gems.push(new GOHero({x: x, y: y}));
@@ -48,12 +49,14 @@ angular.module('dynablasterApp')
                 this.walls.forEach(function(wall) { stage.addChild(wall); });
                 this.bricks.forEach(function(brick) { stage.addChild(brick); });
                 this.gems.forEach(function(gem) { gem.addToStage(stage); });
+                this.bots.forEach(function(bot) { bot.addToStage(stage); });
             },
             removeFromStage: function (stage) {
                 stage.removeChild(this.ground);
                 this.walls.forEach(function(wall) { stage.removeChild(wall); });
                 this.bricks.forEach(function(brick) { stage.addChild(brick); });
                 this.gems.forEach(function(gem) { gem.removeFromStage(stage); });
+                this.bots.forEach(function(bot) { bot.removeFromStage(stage); });
             },
             createGO: function(img, x, y) {
                 var obj = new createjs.Shape();
@@ -62,7 +65,10 @@ angular.module('dynablasterApp')
                 obj.y = y;
 
                 return obj;
+            },
+            update: function() {
+                this.bots.forEach(function(bot) { bot.update(); });
             }
         };
         return GOGround;
-    }]);
+    });
