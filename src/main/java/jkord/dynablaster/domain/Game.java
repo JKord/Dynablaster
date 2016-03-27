@@ -26,6 +26,10 @@ abstract class Game implements IGame {
         // TODO
     }
 
+    public void update() {
+        map.update();
+    }
+
     public String getKey() {
         return key;
     }

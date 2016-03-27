@@ -36,6 +36,8 @@ public class GameResource {
         if (game == null) {
             game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
             session.setAttribute(IGame.KEY_NAME, game.getKey());
+        } else {
+            game.update();
         }
 
         return new GameDTO(game);

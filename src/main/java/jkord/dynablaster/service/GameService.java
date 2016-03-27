@@ -6,9 +6,11 @@ import jkord.core.service.util.RandomUtil;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.*;
 import jkord.dynablaster.domain.obj.BotObject;
+import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
+import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +33,21 @@ public class GameService {
         String key = RandomUtil.generateKeyGame();
 
         IGame game;
-        switch (type) { // TODO
+        switch (type) {
             case SINGLE: {
                 game = new SingleGame(key);
                 User user = userService.getUserWithAuthorities();
                 ((SingleGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
-            case MULTI: {
+            case MULTI: { // TODO
                 game = new MultiGame(key);
             } break;
             case BOTS: {
                 game = new SingleWithBotsGame(key);
+                User user = userService.getUserWithAuthorities();
+                ((SingleWithBotsGame) game).start(user);
+                addUserKey(user.getLogin(), key);
             } break;
             default: {
                 throw new CustomParameterizedException("Game type is not supported");
@@ -103,14 +108,24 @@ public class GameService {
 
     public ArrayList<Position> moveBot(IGame game, int id) {
         BotObject bot = game.getMap().getBots().get(id);
+        if (bot == null)
+            return null;
+
+        GameMap map = game.getMap();
         if (bot.getPathToGo() != null) {
             Position oldPoz = bot.getPathToGo().get(bot.getPathToGo().size() - 1);
             bot.move(oldPoz.getX(), oldPoz.getY());
+        } else {
+            map.setObjToMapWithoutCheck(
+                new MapObject(MapObjectType.FREE),
+                bot.getPosition().getX(),
+                bot.getPosition().getY()
+            );
         }
 
         Position pos = GameMap.getRandPosition();
-        for (int i = 0; i < 5; i++) {
-            if (game.getMap().isFreePosition(pos.getX(), pos.getY()))
+        for (int i = 0; i < 10; i++) {
+            if (map.isFreePosition(pos.getX(), pos.getY()))
                 break;
             pos = GameMap.getRandPosition();
         }

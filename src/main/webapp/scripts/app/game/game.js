@@ -5,7 +5,7 @@ angular.module('dynablasterApp')
         $stateProvider
             .state('game', {
                 parent: 'site',
-                url: '/game',
+                url: '/game/:type',
                 data: {
                     authorities: ['ROLE_USER']
                 },

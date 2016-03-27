@@ -7,6 +7,7 @@ public interface IGame {
 
     void start();
     void end();
+    void update();
 
     String getKey();
 

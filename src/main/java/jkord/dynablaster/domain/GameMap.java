@@ -10,6 +10,7 @@ import jkord.dynablaster.domain.piece.Position;
 import org.codehaus.jackson.annotate.JsonValue;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameMap implements Serializable {
@@ -73,21 +74,38 @@ public class GameMap implements Serializable {
         IGameObject gameObj = obj.getGameObject();
         switch (obj.getType()) {
             case PLAYER: {
-                setIdToMapObj(obj);
                 PlayerObject player = (PlayerObject) gameObj;
                 players.put(player.getUser().getId(), player);
             } break;
             case MONSTER: case ENEMY: {
-                setIdToMapObj(obj);
-                gameObj = new BotObject();
+                gameObj = (gameObj == null)? new BotObject() : (BotObject) gameObj;
+                setIdToMapObj(mapObjects[x][y], obj);
                 bots.put(obj.getId(), (BotObject) gameObj);
             } break;
         }
+        obj.setGameObject(gameObj);
+        setFastObjToMap(obj, x, y);
+    }
+
+    public void setFastObjToMap(MapObject obj, int x, int y) {
+        IGameObject gameObj = obj.getGameObject();
         if (gameObj != null) {
             gameObj.setPosition(x, y);
             gameObj.setMap(this);
         }
+        setIdToMapObj(mapObjects[x][y], obj);
         mapObjects[x][y] = obj;
+    }
+
+
+    public void update() {
+        bots.forEach((i, bot) -> {
+            setFastObjToMap(
+                new MapObject(MapObjectType.MONSTER, bot),
+                bot.getPosition().getX(),
+                bot.getPosition().getY()
+            );
+        });
     }
 
     protected void createMap() {
@@ -125,9 +143,11 @@ public class GameMap implements Serializable {
         }
     }
 
-    private void setIdToMapObj(MapObject obj) {
-        if (obj.getId() == -1) {
-            obj.setId(RandomUtil.generateId());
-        }
+    private void setIdToMapObj(MapObject oldObj, MapObject newObj) {
+        MapObjectType objs[] = {MapObjectType.PLAYER, MapObjectType.MONSTER, MapObjectType.ENEMY};
+        if (!Arrays.asList(objs).contains(newObj.getType()))
+            return;
+        if (newObj.getId() == -1)
+            newObj.setId((oldObj.getId() == -1)? RandomUtil.generateId() : oldObj.getId());
     }
 }

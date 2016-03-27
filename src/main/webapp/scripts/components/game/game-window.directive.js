@@ -8,13 +8,14 @@ angular.module('dynablasterApp')
             scope: {
                 width: '=width',
                 height: '=height',
+                typeGame: '=',
                 score: '=score'
             },
             template: "<canvas width='640' height='520'></canvas>",
             link: function (scope, elem, attrs) {
-                var w, h, gameObj = {}, type = 'single';
+                var w, h, gameObj = {};
 
-                gameService.startGame(type).then(function (data) {
+                gameService.startGame(scope.typeGame).then(function (data) {
                     scope.game = data;
                     gameService.socketInit(function() {
                         gameService.sendMsg('game/start', {});
@@ -43,8 +44,12 @@ angular.module('dynablasterApp')
                 }
 
                 function handleComplete() {
-                    gameObj.map = new GOMap(scope.game.map);
+                    gameObj.map = new GOMap();
+                    gameObj.map.loadObj(scope.game.map);
                     gameObj.map.addToStage(scope.stage);
+
+                    console.log(scope.game.map);
+                    console.log(gameObj.map.bots);
 
                     window.onkeydown = keydown;
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;

@@ -10,7 +10,7 @@ import java.util.UUID;
 public final class RandomUtil {
 
     private static final int DEF_COUNT = 20;
-    private static int idCounter = 0;
+    private static int idCounter = 1;
 
     private RandomUtil() {
     }

@@ -65,7 +65,6 @@ public class AreaMap {
         this.mapHeight = GameMap.VERTICAL_SIZE;
         this.obstacleMap = transpone(gameMap.getMap());
         createMap();
-        log.addToLog("\tMap Created");
     }
 
     private MapObject[][] transpone(MapObject[][] o)  {

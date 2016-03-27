@@ -17,9 +17,14 @@ public class MapObject implements Serializable {
         this.type = type;
     }
 
-    public MapObject(MapObjectType type, IGameObject gameObject) {
+    public MapObject(MapObjectType type, IGameObject gameObject, int id) {
         this.type = type;
         this.gameObject = gameObject;
+        this.id = id;
+    }
+
+    public MapObject(MapObjectType type, IGameObject gameObject) {
+       this(type, gameObject, -1);
     }
 
     public int getId() {

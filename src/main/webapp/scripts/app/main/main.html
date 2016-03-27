@@ -12,9 +12,9 @@
                 <div class="panel panel-default" ng-switch-when="true">
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked nav-center">
-                            <li role="presentation"><a ui-sref="game">Single player</a></li>
-                            <li role="presentation"><a href="#">Multi player</a></li>
-                            <li role="presentation"><a href="#">Play with bots</a></li>
+                            <li role="presentation"><a ui-sref="game({type:'single'})">Single player</a></li>
+                            <li role="presentation"><a ui-sref="game({type:'multi'})">Multi player</a></li>
+                            <li role="presentation"><a ui-sref="game({type:'bots'})">Play with bots</a></li>
                         </ul>
                     </div>
                 </div>

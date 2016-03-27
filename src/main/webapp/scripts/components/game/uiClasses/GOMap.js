@@ -1,7 +1,6 @@
 angular.module('dynablasterApp')
     .factory('GOMap', function (loaderRes, GOHero, GOBot) {
-        function GOGround(map) {
-            var self = this;
+        function GOGround() {
             this.img = {
                 ground: loaderRes.getResult('ground'),
                 brick: loaderRes.getResult('brick'),
@@ -18,30 +17,8 @@ angular.module('dynablasterApp')
             this.bots = [];
             this.gems = [];
 
-            var start = {x: 60, y: 40};
+            this.start = {x: 60, y: 40};
             this.size = {w: 40, h: 40};
-
-            map.forEach(function(items, i) {
-                items.forEach(function(item, j) {
-                    var x = start.x + self.size.w * i,
-                        y = start.y + self.size.h * j;
-
-                    switch (item.type) {
-                        case 'WALL': {
-                            self.walls.push(self.createGO(self.img.wall, x, y));
-                        } break;
-                        case 'BRICK': {
-                            self.bricks.push(self.createGO(self.img.brick, x, y));
-                        } break;
-                        case 'MONSTER': {
-                            self.bots.push(new GOBot({x: x, y: y}, item.id));
-                        } break;
-                        case 'PLAYER': {
-                            self.gems.push(new GOHero({x: x, y: y}));
-                        } break;
-                    }
-                });
-            });
         }
         GOGround.prototype = {
             addToStage: function (stage) {
@@ -65,6 +42,30 @@ angular.module('dynablasterApp')
                 obj.y = y;
 
                 return obj;
+            },
+            loadObj: function(map) {
+                var self = this;
+                map.forEach(function(items, i) {
+                    items.forEach(function(item, j) {
+                        var x = self.start.x + self.size.w * i,
+                            y = self.start.y + self.size.h * j;
+
+                        switch (item.type) {
+                            case 'WALL': {
+                                self.walls.push(self.createGO(self.img.wall, x, y));
+                            } break;
+                            case 'BRICK': {
+                                self.bricks.push(self.createGO(self.img.brick, x, y));
+                            } break;
+                            case 'MONSTER': {
+                                self.bots.push(new GOBot({x: x, y: y}, item.id));
+                            } break;
+                            case 'PLAYER': {
+                                self.gems.push(new GOHero({x: x, y: y}));
+                            } break;
+                        }
+                    });
+                });
             },
             update: function() {
                 this.bots.forEach(function(bot) { bot.update(); });

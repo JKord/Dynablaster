@@ -14,12 +14,8 @@ angular.module('dynablasterApp')
             socketInit: function(connect) {
                 socket = new SockJS('/game-msg');
                 this.stompClient = Stomp.over(socket);
-                var self = this;
-
-                this.stompClient.connect({}, function(frame) {
-                    console.log('Connected: ' + frame);
-                    connect();
-                });
+                this.stompClient.debug = null;
+                this.stompClient.connect({}, connect);
             },
             socketClose: function() {
                 if (this.stompClient != null) {
