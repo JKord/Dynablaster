@@ -1,5 +1,6 @@
 package jkord.dynablaster.domain;
 
+import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Lobby;
 import jkord.dynablaster.entity.LobbyUser;
 import jkord.dynablaster.entity.Statistics;
@@ -11,6 +12,7 @@ public class MultiGame extends Game {
 
     public MultiGame(String key) {
         super(key);
+        type = GameType.MULTI;
     }
 
     public void start() {

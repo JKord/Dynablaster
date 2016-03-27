@@ -3,41 +3,24 @@ package jkord.dynablaster.finder;
 import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.heuristics.AStarHeuristic;
 import jkord.dynablaster.finder.heuristics.DiagonalHeuristic;
-import jkord.dynablaster.finder.utils.Logger;
-import jkord.dynablaster.finder.utils.StopWatch;
 import java.util.ArrayList;
 
 public class PathFinder {
 
 	AreaMap map;
-	Logger log = new Logger();
-    StopWatch s = new StopWatch();
 
 	public ArrayList<Position> getWaypoints(AreaMap map) {
 		this.map = map;
 
-		log.addToLog("AStar Heuristic initializing...");
 		AStarHeuristic heuristic = new DiagonalHeuristic();
-
-		log.addToLog("AStar initializing...");
 		AStar aStar = new AStar(map, heuristic);
-
-		log.addToLog("Calculating shortest path with AStar...");
 		ArrayList<Position> shortestPath = aStar.calcShortestPath(
             map.getStartLocationX(),
             map.getStartLocationY(),
             map.getGoalLocationX(),
             map.getGoalLocationY()
         );
-
-		//log.addToLog("Printing map of shortest path...");
-		//new PrintMap(map, shortestPath);
-
-		log.addToLog("Calculating optimized waypoints...");
-        s.start();
 		ArrayList<Position> waypoints = calculateWayPoints(shortestPath);
-        s.stop();
-		log.addToLog("Time to calculate waypoints: " + s.getElapsedTime() + " ms");
 
 		return waypoints;
 	}
@@ -64,7 +47,6 @@ public class PathFinder {
 				p1Number = p2Number-1;
 				p1 = shortestPath.get(p1Number);
 				waypoints.add(p1);
-				log.addToLog("Got waypoint: " + p1.toString());
 				p2Number++;
 				p2 = shortestPath.get(p2Number);
 			}

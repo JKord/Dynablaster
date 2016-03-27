@@ -7,5 +7,5 @@ public enum MapObjectType {
     BOMB,
     PLAYER,
     MONSTER,
-    MapObjectType, ENEMY
+    ENEMY
 }

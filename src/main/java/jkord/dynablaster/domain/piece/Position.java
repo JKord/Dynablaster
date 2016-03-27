@@ -1,6 +1,8 @@
 package jkord.dynablaster.domain.piece;
 
-public class Position implements Cloneable {
+import java.io.Serializable;
+
+public class Position implements Cloneable, Serializable {
     public int x;
     public int y;
 

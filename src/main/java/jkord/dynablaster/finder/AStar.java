@@ -2,7 +2,6 @@ package jkord.dynablaster.finder;
 
 import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.heuristics.AStarHeuristic;
-import jkord.dynablaster.finder.utils.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,7 +14,6 @@ public class AStar {
 	private ArrayList<Node> closedList;
 	private SortedNodeList openList;
 	private ArrayList<Position> shortestPath;
-	Logger log = new Logger();
 
 	public AStar(AreaMap map, AStarHeuristic heuristic) {
 		this.map = map;
@@ -25,11 +23,6 @@ public class AStar {
 	}
 
 	public ArrayList<Position> calcShortestPath(int startX, int startY, int goalX, int goalY) {
-		//this.startX = startX;
-		//this.startY = startY;
-		//this.goalX = goalX;
-		//this.goalY = goalY;
-
 		//mark start and goal node
 		map.setStartLocation(startX, startY);
 		map.setGoalLocation(goalX, goalY);

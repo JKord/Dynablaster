@@ -2,7 +2,6 @@ package jkord.dynablaster.finder.heuristics;
 
 import jkord.dynablaster.domain.piece.Position;
 
-
 /**
  * A heuristic that uses the tile that is closest to the target
  * as the next best tile.

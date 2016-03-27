@@ -20,7 +20,6 @@ public class DiagonalHeuristic implements AStarHeuristic {
 		 *
 		 * @param p The small value we add to the heuristic. Should be p < (minimum cost of taking one step) / (expected maximum path length) to avoid
 		 */
-
 		float p = (1/10000);
 		h_result *= (1.0 + p);
 

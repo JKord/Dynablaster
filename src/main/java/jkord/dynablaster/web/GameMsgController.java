@@ -35,4 +35,17 @@ public class GameMsgController extends BaseGameController{
         botMsg.setPath(gameService.moveBot(getGame(headerAccessor), botMsg.getId()));
         return botMsg;
     }
+
+    @MessageMapping("/player/bomb")
+    @SendTo("/game/hero/bomb")
+    public Position bombBurst(SimpMessageHeaderAccessor headerAccessor) {
+        Position position = new Position(1,1);
+        gameService.bombBurst(
+            getUser(headerAccessor),
+            getGame(headerAccessor),
+            position
+        );
+
+        return position;
+    }
 }

@@ -5,6 +5,7 @@ angular.module('dynablasterApp')
             step: 40,
             size: {w: 34, h: 40},
             start: {x: 60, y: 40},
+            position: {x: 0, y: 0},
             obj: null,
             addToStage: function (stage) {
                 stage.addChild(this.obj);
@@ -21,6 +22,7 @@ angular.module('dynablasterApp')
                 this.obj.y = this.start.y + y;
             },
             move: function (x, y) {
+                this.position = {x: x, y: y};
                 this.moveTo(x * this.step, y * this.step);
             },
             setImg: function(img) {

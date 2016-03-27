@@ -2,25 +2,30 @@
 
 angular.module('dynablasterApp')
     .factory('gameService', function ($http) {
-        var socket = null;
-
         return {
+            socket: null,
             stompClient: null,
             startGame: function (type) {
                 return $http.put('api/game/start/' + type).then(function (response) {
                     return response.data;
                 });
             },
+            endGame: function () {
+                this.socketClose();
+                return $http.put('api/game/end').then(function (response) {
+                    return response.data;
+                });
+            },
             socketInit: function(connect) {
-                socket = new SockJS('/game-msg');
-                this.stompClient = Stomp.over(socket);
+                this.socket = new SockJS('/game-msg');
+                this.stompClient = Stomp.over(this.socket);
                 this.stompClient.debug = null;
                 this.stompClient.connect({}, connect);
             },
             socketClose: function() {
                 if (this.stompClient != null) {
                     this.stompClient.disconnect();
-                    sock.close();
+                    this.socket.close();
                 }
             },
             sendMsg: function(name, data) {

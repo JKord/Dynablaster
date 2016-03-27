@@ -58,6 +58,22 @@ public class GameService {
         return game;
     }
 
+    public void endGame(IGame game) {
+        game.end();
+        removeGame(game.getKey());
+        switch (game.getType()) {
+            case SINGLE: case BOTS: {
+                removeUserKey(((SingleGame) game).getUser().getLogin());
+            } break;
+            case MULTI: { // TODO
+
+            } break;
+            default: {
+                throw new CustomParameterizedException("Game type is not supported");
+            }
+        }
+    }
+
     public void addGame(IGame game) {
         games.put(game.getKey(), game);
     }
@@ -74,8 +90,8 @@ public class GameService {
         return usersKeys.get(name);
     }
 
-    public void removeUserKey(Long id) {
-        usersKeys.remove(id);
+    public void removeUserKey(String name) {
+        usersKeys.remove(name);
     }
 
     public IGame getGame(String key) {
@@ -132,5 +148,10 @@ public class GameService {
         bot.movePath(pos.getX(), pos.getY());
 
         return bot.getPathToGo();
+    }
+
+    public void bombBurst(User user, IGame game, Position position) {
+        PlayerObject player = game.getCurrentPlayer(user.getId());
+        player.putBomb(position);
     }
 }

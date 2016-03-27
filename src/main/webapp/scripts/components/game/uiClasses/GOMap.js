@@ -25,7 +25,10 @@ angular.module('dynablasterApp')
                 stage.addChild(this.ground);
                 this.walls.forEach(function(wall) { stage.addChild(wall); });
                 this.bricks.forEach(function(brick) { stage.addChild(brick); });
-                this.gems.forEach(function(gem) { gem.addToStage(stage); });
+                this.gems.forEach(function(gem) {
+                    gem.addToStage(stage);
+                    gem.stage = stage;
+                });
                 this.bots.forEach(function(bot) { bot.addToStage(stage); });
             },
             removeFromStage: function (stage) {
@@ -57,8 +60,8 @@ angular.module('dynablasterApp')
                             case 'BRICK': {
                                 self.bricks.push(self.createGO(self.img.brick, x, y));
                             } break;
-                            case 'MONSTER': {
-                                self.bots.push(new GOBot({x: x, y: y}, item.id));
+                            case 'MONSTER': case 'ENEMY': {
+                                self.bots.push(new GOBot({x: x, y: y}, item.id, item.type));
                             } break;
                             case 'PLAYER': {
                                 self.gems.push(new GOHero({x: x, y: y}));

@@ -1,6 +1,7 @@
 package jkord.dynablaster.domain;
 
 import jkord.dynablaster.domain.obj.PlayerObject;
+import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Lobby;
 import jkord.dynablaster.entity.LobbyUser;
 import jkord.dynablaster.entity.Statistics;
@@ -11,6 +12,7 @@ abstract class Game implements IGame {
 
     protected String key;
     protected GameMap map;
+    protected GameType type;
 
     protected Statistics statistics;
 
@@ -52,5 +54,9 @@ abstract class Game implements IGame {
 
     public PlayerObject getCurrentPlayer(Long id) {
         return map.getPlayers().get(id);
+    }
+
+    public GameType getType() {
+        return type;
     }
 }

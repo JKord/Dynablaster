@@ -4,7 +4,6 @@ import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
-import jkord.dynablaster.finder.utils.Logger;
 import java.util.ArrayList;
 
 /**
@@ -24,8 +23,6 @@ public class AreaMap {
 	private int goalLocationY = 0;
 	private MapObject obstacleMap[][] = {{ new MapObject(MapObjectType.FREE) }};
 
-	private Logger log = new Logger();
-
 	/**
 	 * Class constructor specifying the With and Height of a otherwise empty map.
 	 * (no start and goal location or obstacles)
@@ -37,7 +34,6 @@ public class AreaMap {
 		this.mapHeight = mapHeight;
 
 		createMap();
-		log.addToLog("\tMap Created");
 	}
 
 	/**
@@ -53,7 +49,6 @@ public class AreaMap {
 		this.mapHeight = mapHeight;
 		this.obstacleMap = obstacleMap;
 		createMap();
-		log.addToLog("\tMap Created");
 	}
 
     /**
@@ -84,7 +79,7 @@ public class AreaMap {
 	 */
 	private void createMap() {
 		Node node;
-		map = new ArrayList<ArrayList<Node>>();
+		map = new ArrayList<>();
 		for (int x=0; x<mapWith; x++) {
 			map.add(new ArrayList<Node>());
 			for (int y=0; y<mapHeight; y++) {

@@ -14,6 +14,6 @@ public interface IGameObject extends Serializable {
     void setPosition(int x, int y);
 
     void move(int x, int y);
-    void putBomb();
+    void putBomb(Position position);
     void die();
 }

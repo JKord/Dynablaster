@@ -13,6 +13,7 @@ angular.module('dynablasterApp')
                 {src: "hero_right.png", id: "heroRight"},
                 {src: "hero_up.png", id: "heroUp"},
                 {src: "bomb.png", id: "bomb"},
+                {src: "burst.png", id: "burst"},
             ],
             loader = new createjs.LoadQueue(true);
 

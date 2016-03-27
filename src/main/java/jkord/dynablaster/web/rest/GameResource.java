@@ -1,10 +1,9 @@
 package jkord.dynablaster.web.rest;
 
 import jkord.core.security.AuthoritiesConstants;
-import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.IGame;
-import jkord.dynablaster.domain.obj.BotObject;
 import jkord.dynablaster.domain.piece.GameType;
+import jkord.dynablaster.entity.Statistics;
 import jkord.dynablaster.service.GameService;
 import jkord.dynablaster.web.dto.GameDTO;
 import org.springframework.http.MediaType;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import java.awt.*;
-import java.util.ArrayList;
 
 @RestController
 @Secured(AuthoritiesConstants.USER)
@@ -41,6 +38,17 @@ public class GameResource {
         }
 
         return new GameDTO(game);
+    }
+
+    @RequestMapping(value = "/end", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Statistics end(HttpSession session) {
+        IGame game = gameService.getGame(session);
+        if (game != null) {
+            gameService.endGame(game);
+            session.setAttribute(IGame.KEY_NAME, null);
+        }
+
+        return game.getStatistics();
     }
 
     @RequestMapping(value = "/test-send-msg", method = RequestMethod.GET)

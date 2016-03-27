@@ -5,7 +5,6 @@ import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.finder.AStar;
 import jkord.dynablaster.finder.AreaMap;
 import jkord.dynablaster.finder.heuristics.*;
-import jkord.dynablaster.finder.utils.PrintMap;
 
 import java.util.ArrayList;
 
@@ -23,9 +22,6 @@ public class BotObject extends GameObject {
         AStarHeuristic heuristic = new DiagonalHeuristic();
         AStar aStar = new AStar(areaMap, heuristic);
         pathToGo = aStar.calcShortestPath(position.x, position.y, x, y);
-
-        /*if (pathToGo != null)
-            new PrintMap(areaMap, pathToGo);*/
     }
 
     public ArrayList<Position> getPathToGo() {
@@ -33,7 +29,7 @@ public class BotObject extends GameObject {
     }
 
     @Override
-    public void putBomb() {
+    public void putBomb(Position position) {
 
     }
 

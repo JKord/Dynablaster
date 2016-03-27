@@ -4,6 +4,7 @@ import jkord.core.domain.User;
 import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.MapObjectType;
+import jkord.dynablaster.domain.piece.Position;
 
 public class PlayerObject extends GameObject {
 
@@ -26,7 +27,7 @@ public class PlayerObject extends GameObject {
     }
 
     @Override
-    public void putBomb() {
+    public void putBomb(Position position) {
 
     }
 

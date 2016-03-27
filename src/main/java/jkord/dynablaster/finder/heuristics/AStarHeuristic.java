@@ -2,8 +2,6 @@ package jkord.dynablaster.finder.heuristics;
 
 import jkord.dynablaster.domain.piece.Position;
 
-import java.awt.*;
-
 /**
  * The interface AStar Heuristics have to implement.
  */

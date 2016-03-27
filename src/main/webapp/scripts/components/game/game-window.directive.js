@@ -68,29 +68,10 @@ angular.module('dynablasterApp')
 
                 var time = 1;
                 function tick(event) {
-                    var deltaS = event.delta / 1000,
-                        deltaT = event.delta / 1000 * 1000 >> 1;
-
                     if (time < event.timeStamp) {
                         time = event.timeStamp + 1100;
                         gameObj.map.update();
                     }
-
-                    /*if (deltaT == 15)
-                        gameObj.map.update();*/
-
-                    //var position = grant.getX() + 150 * deltaS;
-                    /*grant.setX((position >= w + grant.getWidth()) ? -grant.getWidth() : position);
-                    ground.setX((ground.getX() - deltaS * 150) % ground.getTileWidth());
-                    hill.move(deltaS * -30, 0);
-                    if (hill.getX() + hill.getImageWidth() * hill.getScaleX() <= 0) {
-                        hill.setX(w);
-                    }
-                    hill2.move(deltaS * -45, 0);
-                    if (hill2.getX() + hill2.getImageWidth() * hill2.getScaleX() <= 0) {
-                        hill2.setX(w);
-                    }*/
-
                     scope.stage.update(event);
                 }
             }

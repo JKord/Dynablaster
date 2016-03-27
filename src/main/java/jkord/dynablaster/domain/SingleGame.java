@@ -3,6 +3,7 @@ package jkord.dynablaster.domain;
 import jkord.core.domain.User;
 import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
+import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.MapObjectType;
 
 public class SingleGame extends Game {
@@ -11,6 +12,7 @@ public class SingleGame extends Game {
 
     public SingleGame(String key) {
         super(key);
+        type = GameType.SINGLE;
     }
 
     public void start(User user) {
