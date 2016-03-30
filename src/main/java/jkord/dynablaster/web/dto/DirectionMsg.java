@@ -1,6 +1,8 @@
 package jkord.dynablaster.web.dto;
 
-public class DirectionMsg {
+import java.io.Serializable;
+
+public class DirectionMsg implements Serializable {
     private String direction;
 
     public String getDirection() {

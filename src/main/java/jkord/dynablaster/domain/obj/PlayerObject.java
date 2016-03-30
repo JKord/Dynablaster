@@ -15,6 +15,10 @@ public class PlayerObject extends GameObject {
         this.type = MapObjectType.PLAYER;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void move(Direction direction) {
         int x = position.x, y = position.y;
         switch (direction) {
@@ -27,16 +31,32 @@ public class PlayerObject extends GameObject {
     }
 
     @Override
-    public void putBomb(Position position) {
-
-    }
-
-    @Override
     public void die() {
 
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public void putBomb(Position position) {
+        for (int i = 0; i < 2; i++) {
+            if (position.x < GameMap.VERTICAL_SIZE)
+                burstBomb(position.x + i, position.y);
+            if (position.x - i >= 0)
+                burstBomb(position.x - i, position.y);
+            if (position.y + i < GameMap.HORIZONTAL_SIZE)
+                burstBomb(position.x, position.y + i);
+            if (position.y - i >= 0)
+                burstBomb(position.x, position.y - i);
+        }
+    }
+
+    protected void burstBomb(int x, int y) {
+        MapObject obj = map.getMap()[x][y];
+        if (obj.getType() == MapObjectType.WALL)
+            return;
+        if (obj.gameObject != null) {
+            obj.gameObject.die();
+        }
+        map.destroyObj(obj, x, y);
+        map.setFastObjToMap(new MapObject(MapObjectType.FREE), x, y);
     }
 }

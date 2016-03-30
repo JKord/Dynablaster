@@ -9,6 +9,9 @@ import java.io.Serializable;
 public interface IGameObject extends Serializable {
     GameMap getMap();
     void setMap(GameMap map);
+
+    int getId();
+    void setId(int id);
     Position getPosition();
     void setPosition(Position position);
     void setPosition(int x, int y);

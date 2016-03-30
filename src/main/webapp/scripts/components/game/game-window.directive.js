@@ -47,6 +47,7 @@ angular.module('dynablasterApp')
                     gameObj.map = new GOMap();
                     gameObj.map.loadObj(scope.game.map);
                     gameObj.map.addToStage(scope.stage);
+                    gameService.goMap = gameObj.map;
 
                     console.log(scope.game.map);
                     console.log(gameObj.map.bots);

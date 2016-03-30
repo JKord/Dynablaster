@@ -4,14 +4,18 @@ import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.Position;
 import jkord.dynablaster.web.dto.BotMsg;
 import jkord.dynablaster.web.dto.DirectionMsg;
+import jkord.dynablaster.web.dto.MapPositionObject;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @Controller
 public class GameMsgController extends BaseGameController{
 
+    // FIXME: Mapping on one game
     @MessageMapping("/game/start")
     public void start(SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor
@@ -38,14 +42,11 @@ public class GameMsgController extends BaseGameController{
 
     @MessageMapping("/player/bomb")
     @SendTo("/game/hero/bomb")
-    public Position bombBurst(SimpMessageHeaderAccessor headerAccessor) {
-        Position position = new Position(1,1);
-        gameService.bombBurst(
+    public List<MapPositionObject> bombBurst(SimpMessageHeaderAccessor headerAccessor, Position position) {
+        return gameService.bombBurst(
             getUser(headerAccessor),
             getGame(headerAccessor),
             position
         );
-
-        return position;
     }
 }

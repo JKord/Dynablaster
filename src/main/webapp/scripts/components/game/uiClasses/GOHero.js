@@ -1,6 +1,6 @@
 angular.module('dynablasterApp')
     .factory('GOHero', function (GObj, loaderRes, gameService) {
-        function GOHero(poz) {
+        function GOHero(poz, id) {
             GOHero.__super__.constructor.apply(this);
             this.img = {
                 up: loaderRes.getResult("heroUp"),
@@ -14,13 +14,19 @@ angular.module('dynablasterApp')
             this.obj = new createjs.Shape();
             this.obj.x = poz.x;
             this.obj.y = poz.y;
+            this.id = id;
             this.setImg(this.img.down);
-            this.bombs = [];
 
             var self = this;
             gameService.stompSubscribe('/game/hero/move', function(position){
                 self.setImg(self.currentImg);
                 self.move(position.x, position.y);
+            });
+            gameService.stompSubscribe('/game/hero/bomb', function(data){
+                console.log(data);
+                data.forEach(function(item) {
+                    gameService.goMap.destroyObject(item);
+                });
             });
 
             this.catchKeyCode = function(keyCode) {
@@ -64,10 +70,8 @@ angular.module('dynablasterApp')
                     bomb.graphics.beginBitmapFill(self.img.burst).drawRect(0, 0, 145, 141);
                     bomb.x = bomb.x - 50;
                     bomb.y = bomb.y - 50;
-                    console.log(position);
-
+                    gameService.sendMsg('/player/bomb', position);
                     setTimeout(function() {
-                        gameService.sendMsg('/player/bomb', position);
                         self.stage.removeChild(bomb);
                     }, 800);
                 }, 3000);

@@ -12,13 +12,12 @@ import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.web.dto.MapPositionObject;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class GameService {
@@ -150,8 +149,15 @@ public class GameService {
         return bot.getPathToGo();
     }
 
-    public void bombBurst(User user, IGame game, Position position) {
+    public List<MapPositionObject> bombBurst(User user, IGame game, Position position) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.putBomb(position);
+
+        List<MapPositionObject> destroyObjects = new LinkedList<>();
+        game.getMap().getDestroyObjects().forEach((poz, mapObject) ->
+            destroyObjects.add(new MapPositionObject(poz, mapObject))
+        );
+
+        return destroyObjects;
     }
 }

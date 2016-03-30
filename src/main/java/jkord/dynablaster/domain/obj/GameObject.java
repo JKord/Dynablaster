@@ -6,9 +6,18 @@ import jkord.dynablaster.domain.piece.Position;
 
 abstract class GameObject implements IGameObject {
 
+    protected int id = -1;
     protected GameMap map;
     protected Position position;
     protected MapObjectType type;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public GameMap getMap() {
         return map;
