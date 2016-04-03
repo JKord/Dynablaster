@@ -18,11 +18,13 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class GameService {
 
-    private static final Map<String, IGame> games = new HashMap<>();
+    private static final ConcurrentMap<String, IGame> games = new ConcurrentHashMap<>();
     private static final Map<String, String> usersKeys = new HashMap<>();
 
     @Inject

@@ -28,7 +28,7 @@ public class GameMap implements Serializable {
         "1110", "1210", "129"
     );
 
-    protected MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
+    protected volatile MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
     protected Map<Long, PlayerObject> players = new HashMap<>();
     protected Map<Integer, BotObject> bots = new HashMap<>();
     protected Map<Position, MapObject> destroyObjects = new HashMap<>();
@@ -111,7 +111,7 @@ public class GameMap implements Serializable {
         setFastObjToMap(obj, x, y);
     }
 
-    public void setFastObjToMap(MapObject obj, int x, int y) {
+    public synchronized void setFastObjToMap(MapObject obj, int x, int y) {
         IGameObject gameObj = obj.getGameObject();
         if (gameObj != null) {
             gameObj.setPosition(x, y);

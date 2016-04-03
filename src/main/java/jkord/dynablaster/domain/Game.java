@@ -8,7 +8,7 @@ import jkord.dynablaster.entity.Statistics;
 
 import java.util.stream.Collectors;
 
-abstract class Game implements IGame {
+abstract class Game implements IGame { // TODO: create game loop on server
 
     protected String key;
     protected GameMap map;

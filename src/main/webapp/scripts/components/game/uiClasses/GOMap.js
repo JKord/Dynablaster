@@ -1,5 +1,5 @@
 angular.module('dynablasterApp')
-    .factory('GOMap', function (loaderRes, GOHero, GOBot) {
+    .factory('GOMap', function (loaderRes, gameService, GOHero, GOBot) {
         function GOGround() {
             this.img = {
                 ground: loaderRes.getResult('ground'),
@@ -81,6 +81,7 @@ angular.module('dynablasterApp')
                             if (item.x == obj.position.x && item.y == obj.position.y) {
                                 bricks.splice(i, 1);
                                 self.stage.removeChild(item.obj);
+
                                 return true;
                             }
                         });
@@ -90,14 +91,12 @@ angular.module('dynablasterApp')
                             if (item.id == obj.id) {
                                 bots.splice(i, 1);
                                 item.removeFromStage(self.stage);
+
                                 return true;
                             }
                         });
                         if (this.bots.length < 1) {
-                            alert('You Win!');
-                            setTimeout(function() {
-                                window.location.href = '/';
-                            }, 1000);
+                            gameService.endGameMsg('You Win!');
                         }
                     } break;
                     case 'PLAYER': {
@@ -106,10 +105,7 @@ angular.module('dynablasterApp')
                             if (item.id == obj.id) {
                                 gems.splice(i, 1);
                                 item.removeFromStage(self.stage);
-                                alert('You died!');
-                                setTimeout(function() {
-                                    window.location.href = '/';
-                                }, 1000);
+                                gameService.endGameMsg('You died!');
 
                                 return true;
                             }

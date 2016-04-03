@@ -16,6 +16,13 @@ angular.module('dynablasterApp')
                     return response.data;
                 });
             },
+            endGameMsg: function(msg) {
+                this.endGame();
+                alert(msg);
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 1000);
+            },
             socketInit: function(connect) {
                 this.socket = new SockJS('/game-msg');
                 this.stompClient = Stomp.over(this.socket);

@@ -12,10 +12,9 @@ import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@Controller
-public class GameMsgController extends BaseGameController{
+@Controller // FIXME: Mapping on one game (Problem SendTo - all subscriptions) - key
+public class GameMsgController extends BaseGameController {
 
-    // FIXME: Mapping on one game
     @MessageMapping("/game/start")
     public void start(SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor
