@@ -46,30 +46,30 @@ springBoot {
 
 bootRun {
     addResources = false
-    args = ["--spring.profiles.active=dev,fast"]
+    args = ["--spring.profiles.active=fast"]
 }
 
 
-test {
-    println 'Starting the Unit and Integration test'
-    include '**/*UnitTest*'
-    include '**/*IntTest*'
-}
+//test {
+//    println 'Starting the Unit and Integration test'
+//    include '**/*UnitTest*'
+//    include '**/*IntTest*'
+//}
+//
+//task cucumberTest(type: Test) {
+//    include '**/CucumberTest*'
+//}
 
-task cucumberTest(type: Test) {
-    include '**/CucumberTest*'
-}
+//test.finalizedBy(cucumberTest)
 
-test.finalizedBy(cucumberTest)
-
-apply from: 'yeoman.gradle'
-apply from: 'sonar.gradle'
+//apply from: 'yeoman.gradle'
+//apply from: 'sonar.gradle'
 
 apply from: 'liquibase.gradle'
 
-apply from: 'gatling.gradle'
+//apply from: 'gatling.gradle'
 apply from: 'mapstruct.gradle'
-//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
+//needle-gradle-apply-from - add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {
     apply from: 'profile_prod.gradle'

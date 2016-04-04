@@ -2,11 +2,7 @@ package jkord.dynablaster.domain;
 
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.entity.Lobby;
-import jkord.dynablaster.entity.LobbyUser;
 import jkord.dynablaster.entity.Statistics;
-
-import java.util.stream.Collectors;
 
 abstract class Game implements IGame {
 
@@ -16,20 +12,19 @@ abstract class Game implements IGame {
 
     protected Statistics statistics;
 
+    protected boolean isRun = false;
+
     public Game(String key) {
         this.key = key;
     }
 
     public void start() {
         map = new GameMap();
+        isRun = true;
     }
 
     public void end() {
-        // TODO
-    }
-
-    public void update() {
-        map.update();
+        isRun = false;
     }
 
     public String getKey() {
@@ -58,5 +53,27 @@ abstract class Game implements IGame {
 
     public GameType getType() {
         return type;
+    }
+
+    public boolean isRun() {
+        return isRun;
+    }
+
+    public void setRun(boolean run) {
+        isRun = run;
+    }
+
+    public void update() {
+        map.update();
+    }
+
+    public void run() {
+        while (isRun) {
+            update();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) { }
+        }
     }
 }

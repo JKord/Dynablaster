@@ -5,6 +5,7 @@ import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.MapObjectType;
+import org.springframework.stereotype.Component;
 
 public class SingleGame extends Game {
 

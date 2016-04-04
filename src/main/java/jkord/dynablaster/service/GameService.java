@@ -1,33 +1,51 @@
 package jkord.dynablaster.service;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import jkord.core.domain.User;
 import jkord.core.service.UserService;
 import jkord.core.service.util.RandomUtil;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.*;
 import jkord.dynablaster.domain.obj.BotObject;
-import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.MapPositionObject;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.*;
 
 @Service
 public class GameService {
 
-    private static final Map<String, IGame> games = new HashMap<>();
+    private static final ConcurrentMap<String, IGame> games = new ConcurrentHashMap<>();
     private static final Map<String, String> usersKeys = new HashMap<>();
+    private static ExecutorService executorService;
 
     @Inject
-    private UserService userService;
+    private UserService sUser;
+
+    @Inject
+    protected MessagingService sMessaging;
+
+    @Inject
+    public GameService(MessagingService messagingService) {
+        executorService = Executors.newCachedThreadPool(
+            new ThreadFactoryBuilder()
+            .setNameFormat("game-%d")
+            .setDaemon(true)
+            .build()
+        );
+
+        // FIXME
+        PlayerObject.SMessaging = messagingService;
+        BotObject.SMessaging = messagingService;
+    }
 
     public IGame createGame(GameType type) {
         String key = RandomUtil.generateKeyGame();
@@ -36,7 +54,7 @@ public class GameService {
         switch (type) {
             case SINGLE: {
                 game = new SingleGame(key);
-                User user = userService.getUserWithAuthorities();
+                User user = sUser.getUserWithAuthorities();
                 ((SingleGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
@@ -45,7 +63,7 @@ public class GameService {
             } break;
             case BOTS: {
                 game = new SingleWithBotsGame(key);
-                User user = userService.getUserWithAuthorities();
+                User user = sUser.getUserWithAuthorities();
                 ((SingleWithBotsGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
@@ -56,6 +74,12 @@ public class GameService {
         addGame(game);
 
         return game;
+    }
+
+
+    public void addGame(IGame game) {
+        executorService.execute(game);
+        games.put(game.getKey(), game);
     }
 
     public void endGame(IGame game) {
@@ -72,10 +96,6 @@ public class GameService {
                 throw new CustomParameterizedException("Game type is not supported");
             }
         }
-    }
-
-    public void addGame(IGame game) {
-        games.put(game.getKey(), game);
     }
 
     public void removeGame(String key) {
@@ -115,14 +135,23 @@ public class GameService {
         return null;
     }
 
-    public Position movePlayer(User user, IGame game, String direction) {
+    public void movePlayer(User user, IGame game, String direction) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.move(Direction.valueOf(direction.toUpperCase()));
+        sMessaging.send(String.format(MsgRoute.PLAYER_MOVE, player.getId()), player.getPosition());
+    }
+    public void bombBurst(User user, IGame game, Position position) {
+        PlayerObject player = game.getCurrentPlayer(user.getId());
+        player.putBomb(position);
 
-        return player.getPosition();
+        List<MapPositionObject> destroyObjects = new LinkedList<>();
+        game.getMap().getDestroyObjects().forEach((poz, mapObject) ->
+            destroyObjects.add(new MapPositionObject(poz, mapObject))
+        );
+        sMessaging.send(String.format(MsgRoute.PLAYER_BOMB, player.getId()), destroyObjects);
     }
 
-    public ArrayList<Position> moveBot(IGame game, int id) {
+    /*public ArrayList<Position> moveBot(IGame game, int id) {
         BotObject bot = game.getMap().getBots().get(id);
         if (bot == null)
             return null;
@@ -132,7 +161,7 @@ public class GameService {
             Position oldPoz = bot.getPathToGo().get(bot.getPathToGo().size() - 1);
             bot.move(oldPoz.getX(), oldPoz.getY());
         } else {
-            map.setObjToMapWithoutCheck(
+            map.setFastObjToMap(
                 new MapObject(MapObjectType.FREE),
                 bot.getPosition().getX(),
                 bot.getPosition().getY()
@@ -140,7 +169,7 @@ public class GameService {
         }
 
         Position pos = GameMap.getRandPosition();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             if (map.isFreePosition(pos.getX(), pos.getY()))
                 break;
             pos = GameMap.getRandPosition();
@@ -148,10 +177,5 @@ public class GameService {
         bot.movePath(pos.getX(), pos.getY());
 
         return bot.getPathToGo();
-    }
-
-    public void bombBurst(User user, IGame game, Position position) {
-        PlayerObject player = game.getCurrentPlayer(user.getId());
-        player.putBomb(position);
-    }
+    }*/
 }

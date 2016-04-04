@@ -5,6 +5,7 @@ import jkord.dynablaster.domain.obj.BotObject;
 import jkord.dynablaster.domain.obj.IGameObject;
 import jkord.dynablaster.domain.obj.MapObject;
 import jkord.dynablaster.domain.obj.PlayerObject;
+import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
 import org.codehaus.jackson.annotate.JsonValue;
@@ -27,9 +28,10 @@ public class GameMap implements Serializable {
         "1110", "1210", "129"
     );
 
-    protected MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
+    protected volatile MapObject mapObjects[][] = new MapObject[HORIZONTAL_SIZE][VERTICAL_SIZE];
     protected Map<Long, PlayerObject> players = new HashMap<>();
     protected Map<Integer, BotObject> bots = new HashMap<>();
+    protected Map<Position, MapObject> destroyObjects = new HashMap<>();
 
     public GameMap() {
         createMap();
@@ -38,6 +40,22 @@ public class GameMap implements Serializable {
     @JsonValue
     public MapObject[][] getMap() {
         return mapObjects;
+    }
+
+    public MapObject get(Position position) {
+        return mapObjects[position.x][position.y];
+    }
+
+    public MapObject get(int x, int y) {
+        return mapObjects[x][y];
+    }
+
+
+    public Map<Position, MapObject> getDestroyObjects() {
+        Map<Position, MapObject> tmpObjs = new HashMap<>(destroyObjects);
+        destroyObjects.clear();
+
+        return tmpObjs;
     }
 
     public Map<Long, PlayerObject> getPlayers() {
@@ -60,6 +78,21 @@ public class GameMap implements Serializable {
         return mapObjects[x][y].getType() == MapObjectType.FREE;
     }
 
+    public void destroyObj(MapObject obj, int x, int y) {
+        IGameObject gameObj = obj.getGameObject();
+        switch (obj.getType()) {
+            case PLAYER: {
+                PlayerObject player = (PlayerObject) gameObj;
+                players.remove(player.getUser().getLogin());
+            } break;
+            case MONSTER: case ENEMY: {
+                bots.remove(obj.getId());
+            } break;
+        }
+        if (obj.getType() != MapObjectType.FREE)
+            destroyObjects.put(new Position(x, y), obj);
+    }
+
     public boolean setObjToMap(MapObject obj, int x, int y) {
         if (isFreePosition(x, y)) {
             setObjToMapWithoutCheck(obj, x, y);
@@ -78,7 +111,10 @@ public class GameMap implements Serializable {
                 players.put(player.getUser().getId(), player);
             } break;
             case MONSTER: case ENEMY: {
-                gameObj = (gameObj == null)? new BotObject() : (BotObject) gameObj;
+                if (gameObj == null) {
+                    gameObj = new BotObject();
+                    obj.setGameObject(gameObj);
+                }
                 setIdToMapObj(mapObjects[x][y], obj);
                 bots.put(obj.getId(), (BotObject) gameObj);
             } break;
@@ -87,7 +123,7 @@ public class GameMap implements Serializable {
         setFastObjToMap(obj, x, y);
     }
 
-    public void setFastObjToMap(MapObject obj, int x, int y) {
+    public synchronized void setFastObjToMap(MapObject obj, int x, int y) {
         IGameObject gameObj = obj.getGameObject();
         if (gameObj != null) {
             gameObj.setPosition(x, y);
@@ -97,8 +133,7 @@ public class GameMap implements Serializable {
         mapObjects[x][y] = obj;
     }
 
-
-    public void update() {
+    public void update2() { // TODO: delete
         bots.forEach((i, bot) -> {
             setFastObjToMap(
                 new MapObject(MapObjectType.MONSTER, bot),
@@ -106,6 +141,11 @@ public class GameMap implements Serializable {
                 bot.getPosition().getY()
             );
         });
+    }
+
+    public void update() {
+        players.forEach((i, player) -> player.update());
+        bots.forEach((i, bot) -> bot.update());
     }
 
     protected void createMap() {
@@ -147,7 +187,18 @@ public class GameMap implements Serializable {
         MapObjectType objs[] = {MapObjectType.PLAYER, MapObjectType.MONSTER, MapObjectType.ENEMY};
         if (!Arrays.asList(objs).contains(newObj.getType()))
             return;
-        if (newObj.getId() == -1)
-            newObj.setId((oldObj.getId() == -1)? RandomUtil.generateId() : oldObj.getId());
+
+        if (newObj.getId() == -1) {
+            int id = oldObj.getId(); // ??
+           //int id = -1;
+            if (newObj.getGameObject() != null) {
+                id = newObj.getGameObject().getId();
+                if(id == -1) {
+                    id = RandomUtil.generateId();
+                    newObj.getGameObject().setId(id);
+                }
+            }
+            newObj.setId((id == -1)? RandomUtil.generateId() : id);
+        }
     }
 }

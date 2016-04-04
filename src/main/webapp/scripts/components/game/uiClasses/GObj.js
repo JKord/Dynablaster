@@ -9,6 +9,7 @@ angular.module('dynablasterApp')
             obj: null,
             addToStage: function (stage) {
                 stage.addChild(this.obj);
+                this.stage = stage;
             },
             removeFromStage: function (stage) {
                 stage.removeChild(this.obj);

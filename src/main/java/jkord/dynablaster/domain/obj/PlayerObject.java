@@ -5,6 +5,8 @@ import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.BotMsg;
 
 public class PlayerObject extends GameObject {
 
@@ -13,6 +15,10 @@ public class PlayerObject extends GameObject {
     public PlayerObject(User user) {
         this.user = user;
         this.type = MapObjectType.PLAYER;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void move(Direction direction) {
@@ -27,16 +33,32 @@ public class PlayerObject extends GameObject {
     }
 
     @Override
-    public void putBomb(Position position) {
-
+    public void die() {
+        SMessaging.send(String.format(MsgRoute.PLAYER_DIE, id), id);
     }
 
     @Override
-    public void die() {
-
+    public void putBomb(Position position) {
+        for (int i = 0; i < 2; i++) {
+            if (position.x + i < GameMap.HORIZONTAL_SIZE)
+                burstBomb(position.x + i, position.y);
+            if (position.x - i >= 0)
+                burstBomb(position.x - i, position.y);
+            if (position.y + i < GameMap.VERTICAL_SIZE)
+                burstBomb(position.x, position.y + i);
+            if (position.y - i >= 0)
+                burstBomb(position.x, position.y - i);
+        }
     }
 
-    public User getUser() {
-        return user;
+    protected void burstBomb(int x, int y) {
+        MapObject obj = map.getMap()[x][y];
+        if (obj.getType() == MapObjectType.WALL)
+            return;
+        if (obj.gameObject != null) {
+            obj.gameObject.die();
+        }
+        map.destroyObj(obj, x, y);
+        map.setFastObjToMap(new MapObject(MapObjectType.FREE), x, y);
     }
 }

@@ -3,7 +3,9 @@ package jkord.dynablaster.web.dto;
 import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.obj.MapObject;
 
-public class GameDTO {
+import java.io.Serializable;
+
+public class GameDTO implements Serializable {
     private String key;
 
     private MapObject map[][];
