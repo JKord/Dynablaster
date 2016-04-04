@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 public class BotMsg implements Serializable {
     private int id;
-    private ArrayList<Position> path;
+    private Position position;
 
     public BotMsg() {}
 
-    public BotMsg(int id, ArrayList<Position> path) {
+    public BotMsg(int id, Position position) {
         this.id = id;
-        this.path = path;
+        this.position = position;
     }
 
     public int getId() {
@@ -24,11 +24,11 @@ public class BotMsg implements Serializable {
         this.id = id;
     }
 
-    public ArrayList<Position> getPath() {
-        return path;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setPath(ArrayList<Position> path) {
-        this.path = path;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

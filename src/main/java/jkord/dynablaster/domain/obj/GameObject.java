@@ -3,6 +3,9 @@ package jkord.dynablaster.domain.obj;
 import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.service.MessagingService;
+
+import javax.inject.Inject;
 
 abstract class GameObject implements IGameObject {
 
@@ -10,6 +13,8 @@ abstract class GameObject implements IGameObject {
     protected GameMap map;
     protected Position position;
     protected MapObjectType type;
+
+    public static MessagingService SMessaging;
 
     public int getId() {
         return id;
@@ -51,9 +56,11 @@ abstract class GameObject implements IGameObject {
         if (x >= 0 && y >= 0 && x < GameMap.HORIZONTAL_SIZE && y < GameMap.VERTICAL_SIZE) {
             int oldX = position.x, oldY = position.y;
             if (map.setObjToMap(new MapObject(type, this), x, y)) {
-                map.setObjToMapWithoutCheck(new MapObject(MapObjectType.FREE), oldX, oldY);
+                map.setFastObjToMap(new MapObject(MapObjectType.FREE), oldX, oldY);
                 setPosition(x, y);
             }
         }
     }
+
+    public void update() { }
 }

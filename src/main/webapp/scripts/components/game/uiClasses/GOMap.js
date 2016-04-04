@@ -71,7 +71,7 @@ angular.module('dynablasterApp')
                 });
             },
             update: function() {
-                this.bots.forEach(function(bot) { bot.update(); });
+                //this.bots.forEach(function(bot) { bot.update(); });
             },
             destroyObject: function(obj){
                 var self = this;

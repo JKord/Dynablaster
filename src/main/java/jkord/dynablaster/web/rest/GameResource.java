@@ -5,6 +5,7 @@ import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Statistics;
 import jkord.dynablaster.service.GameService;
+import jkord.dynablaster.service.MessagingService;
 import jkord.dynablaster.web.dto.GameDTO;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -25,7 +26,7 @@ public class GameResource {
     private GameService gameService;
 
     @Inject
-    private SimpMessagingTemplate simpMessagingTemplate;
+    protected MessagingService messagingService;
 
     @RequestMapping(value = "/start/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public GameDTO start(HttpSession session, @PathVariable String type) {
@@ -33,8 +34,6 @@ public class GameResource {
         if (game == null) {
             game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
             session.setAttribute(IGame.KEY_NAME, game.getKey());
-        } else {
-            game.update();
         }
 
         return new GameDTO(game);
@@ -49,15 +48,5 @@ public class GameResource {
         }
 
         return game.getStatistics();
-    }
-
-    @RequestMapping(value = "/test-send-msg", method = RequestMethod.GET)
-    public String testSendMsg() {
-
-        //simpMessagingTemplate.convertAndSend("/queue/chats-" + "mycustomidentifier", "[" + getTimestamp() + "]:" + message.getMessage());
-
-        simpMessagingTemplate.convertAndSend("move", "test");
-
-        return "ok";
     }
 }

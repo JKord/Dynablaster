@@ -5,6 +5,8 @@ import jkord.dynablaster.domain.GameMap;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.MapObjectType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.BotMsg;
 
 public class PlayerObject extends GameObject {
 
@@ -32,17 +34,17 @@ public class PlayerObject extends GameObject {
 
     @Override
     public void die() {
-
+        SMessaging.send(String.format(MsgRoute.PLAYER_DIE, id), id);
     }
 
     @Override
     public void putBomb(Position position) {
         for (int i = 0; i < 2; i++) {
-            if (position.x < GameMap.VERTICAL_SIZE)
+            if (position.x + i < GameMap.HORIZONTAL_SIZE)
                 burstBomb(position.x + i, position.y);
             if (position.x - i >= 0)
                 burstBomb(position.x - i, position.y);
-            if (position.y + i < GameMap.HORIZONTAL_SIZE)
+            if (position.y + i < GameMap.VERTICAL_SIZE)
                 burstBomb(position.x, position.y + i);
             if (position.y - i >= 0)
                 burstBomb(position.x, position.y - i);

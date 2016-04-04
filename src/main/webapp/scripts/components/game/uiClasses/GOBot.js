@@ -12,17 +12,13 @@ angular.module('dynablasterApp')
             this.setImg(loaderRes.getResult((type == 'MONSTER')? 'monster1' : 'monster2'));
 
             var self = this;
-            gameService.stompSubscribe('/game/bot/move', function(data){
-                if (self.id == data.id) {
-                    self.pathToGo = data.path;
-                    self.pathToGoI = 0;
-                }
+            gameService.stompSubscribe('/game/bot/' + this.id + '/move', function(data){
+                self.move(data.position.x, data.position.y);
             });
 
-            this.newPath = function (){
+            /*this.newPath = function (){
                 gameService.sendMsg('bot/move', {id: this.id, path: []});
             };
-
             this.update = function() {
                 if (self.pathToGo) {
                     if (self.pathToGo[self.pathToGoI]) {
@@ -38,7 +34,7 @@ angular.module('dynablasterApp')
                     }
                 }
             };
-            this.newPath();
+            this.newPath();*/
 
         } __extends(GOBot, GObj);
 

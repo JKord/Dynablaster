@@ -18,15 +18,18 @@ angular.module('dynablasterApp')
             this.setImg(this.img.down);
 
             var self = this;
-            gameService.stompSubscribe('/game/hero/move', function(position){
+            gameService.stompSubscribe('/game/hero/' + this.id + '/move', function(position){
                 self.setImg(self.currentImg);
                 self.move(position.x, position.y);
             });
-            gameService.stompSubscribe('/game/hero/bomb', function(data){
+            gameService.stompSubscribe('/game/hero/' + this.id + '/bomb', function(data){
                 console.log(data);
                 data.forEach(function(item) {
                     gameService.goMap.destroyObject(item);
                 });
+            });
+            gameService.stompSubscribe('/game/hero/' + this.id + '/die', function(){
+                gameService.endGameMsg('You died!');
             });
 
             this.catchKeyCode = function(keyCode) {

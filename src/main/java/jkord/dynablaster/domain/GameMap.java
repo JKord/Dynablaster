@@ -42,6 +42,15 @@ public class GameMap implements Serializable {
         return mapObjects;
     }
 
+    public MapObject get(Position position) {
+        return mapObjects[position.x][position.y];
+    }
+
+    public MapObject get(int x, int y) {
+        return mapObjects[x][y];
+    }
+
+
     public Map<Position, MapObject> getDestroyObjects() {
         Map<Position, MapObject> tmpObjs = new HashMap<>(destroyObjects);
         destroyObjects.clear();
@@ -74,7 +83,7 @@ public class GameMap implements Serializable {
         switch (obj.getType()) {
             case PLAYER: {
                 PlayerObject player = (PlayerObject) gameObj;
-                bots.remove(player.getUser().getLogin());
+                players.remove(player.getUser().getLogin());
             } break;
             case MONSTER: case ENEMY: {
                 bots.remove(obj.getId());
@@ -102,7 +111,10 @@ public class GameMap implements Serializable {
                 players.put(player.getUser().getId(), player);
             } break;
             case MONSTER: case ENEMY: {
-                gameObj = (gameObj == null)? new BotObject() : (BotObject) gameObj;
+                if (gameObj == null) {
+                    gameObj = new BotObject();
+                    obj.setGameObject(gameObj);
+                }
                 setIdToMapObj(mapObjects[x][y], obj);
                 bots.put(obj.getId(), (BotObject) gameObj);
             } break;
@@ -121,8 +133,7 @@ public class GameMap implements Serializable {
         mapObjects[x][y] = obj;
     }
 
-
-    public void update() {
+    public void update2() { // TODO: delete
         bots.forEach((i, bot) -> {
             setFastObjToMap(
                 new MapObject(MapObjectType.MONSTER, bot),
@@ -130,6 +141,11 @@ public class GameMap implements Serializable {
                 bot.getPosition().getY()
             );
         });
+    }
+
+    public void update() {
+        players.forEach((i, player) -> player.update());
+        bots.forEach((i, bot) -> bot.update());
     }
 
     protected void createMap() {
@@ -173,17 +189,16 @@ public class GameMap implements Serializable {
             return;
 
         if (newObj.getId() == -1) {
-            int id = -1;
+            int id = oldObj.getId(); // ??
+           //int id = -1;
             if (newObj.getGameObject() != null) {
-                if(newObj.getGameObject().getId() == -1) {
+                id = newObj.getGameObject().getId();
+                if(id == -1) {
                     id = RandomUtil.generateId();
                     newObj.getGameObject().setId(id);
-                } else {
-                    id = newObj.getGameObject().getId();
                 }
             }
-            newObj.setId((oldObj.getId() == -1 && id == -1)? RandomUtil.generateId() : oldObj.getId());
+            newObj.setId((id == -1)? RandomUtil.generateId() : id);
         }
-
     }
 }
