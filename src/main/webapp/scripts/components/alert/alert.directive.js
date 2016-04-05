@@ -1,98 +1,54 @@
 'use strict';
 
 angular.module('dynablasterApp')
-    .directive('jhAlert', function(AlertService) {
-        return {
-            restrict: 'E',
-            template: '<div class="alerts" ng-cloak="">' +
-                            '<div ng-repeat="alert in alerts" ng-class="[alert.position, {\'toast\': alert.toast}]">' +
-                                '<uib-alert ng-cloak="" type="{{alert.type}}" close="alert.close()"><pre>{{ alert.msg }}</pre></uib-alert>' +
-                            '</div>' +
-                      '</div>',
-            controller: ['$scope',
-                function($scope) {
-                    $scope.alerts = AlertService.get();
-                    $scope.$on('$destroy', function () {
-                        $scope.alerts = [];
-                    });
-                }
-            ]
-        }
+    .controller('ModalCtrl', function ($scope) {
+        $scope.showModal = false;
+        $scope.toggleModal = function(){
+            $scope.showModal = !$scope.showModal;
+        };
     })
-    .directive('jhAlertError', function(AlertService, $rootScope) {
+    .directive('modal', function () {
         return {
+            template: '<div class="modal fade">' +
+                '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                            '<h4 class="modal-title">{{ title }}</h4>' +
+                        '</div>' +
+                        '<div class="modal-body" ng-transclude></div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>',
             restrict: 'E',
-            template: '<div class="alerts" ng-cloak="">' +
-                            '<div ng-repeat="alert in alerts" ng-class="[alert.position, {\'toast\': alert.toast}]">' +
-                                '<uib-alert ng-cloak="" type="{{alert.type}}" close="alert.close(alerts)"><pre>{{ alert.msg }}</pre></uib-alert>' +
-                            '</div>' +
-                      '</div>',
-            controller: ['$scope',
-                function($scope) {
+            transclude: true,
+            replace: true,
+            scope: true,
+            link: function postLink(scope, element, attrs) {
+                scope.title = attrs.title;
 
-                    $scope.alerts = [];
+                scope.$watch(attrs.visible, function(value){
+                    if(value == true)
+                        $(element).modal('show');
+                    else
+                        $(element).modal('hide');
+                });
 
-                    var cleanHttpErrorListener = $rootScope.$on('dynablasterApp.httpError', function (event, httpResponse) {
-                        var i;
-                        event.stopPropagation();
-                        switch (httpResponse.status) {
-                            // connection refused, server not reachable
-                            case 0:
-                                addErrorAlert("Server not reachable",'error.server.not.reachable');
-                                break;
-
-                            case 400:
-                                var errorHeader = httpResponse.headers('X-dynablasterApp-error');
-                                var entityKey = httpResponse.headers('X-dynablasterApp-params');
-                                if (errorHeader) {
-                                    var entityName = entityKey;
-                                    addErrorAlert(errorHeader, errorHeader, {entityName: entityName});
-                                } else if (httpResponse.data && httpResponse.data.fieldErrors) {
-                                    for (i = 0; i < httpResponse.data.fieldErrors.length; i++) {
-                                        var fieldError = httpResponse.data.fieldErrors[i];
-                                        // convert 'something[14].other[4].id' to 'something[].other[].id' so translations can be written to it
-                                        var convertedField = fieldError.field.replace(/\[\d*\]/g, "[]");
-                                        var fieldName = convertedField.charAt(0).toUpperCase() + convertedField.slice(1);
-                                        addErrorAlert('Field ' + fieldName + ' cannot be empty', 'error.' + fieldError.message, {fieldName: fieldName});
-                                    }
-                                } else if (httpResponse.data && httpResponse.data.message) {
-                                    addErrorAlert(httpResponse.data.message, httpResponse.data.message, httpResponse.data);
-                                } else {
-                                    addErrorAlert(httpResponse.data);
-                                }
-                                break;
-
-                            default:
-                                if (httpResponse.data && httpResponse.data.message) {
-                                    addErrorAlert(httpResponse.data.message);
-                                } else {
-                                    addErrorAlert(JSON.stringify(httpResponse));
-                                }
-                        }
+                $(element).on('shown.bs.modal', function(){
+                    scope.$apply(function(){
+                        scope.$parent[attrs.visible] = true;
                     });
+                });
 
-                    $scope.$on('$destroy', function () {
-                        if(cleanHttpErrorListener !== undefined && cleanHttpErrorListener !== null){
-                            cleanHttpErrorListener();
-                            $scope.alerts = [];
-                        }
+                $(element).on('hidden.bs.modal', function(){
+                    scope.$apply(function(){
+                        scope.$parent[attrs.visible] = false;
                     });
+                });
 
-                    var addErrorAlert = function (message, key, data) {
-                        $scope.alerts.push(
-                            AlertService.add(
-                                {
-                                    type: "danger",
-                                    msg: message,
-                                    timeout: 5000,
-                                    toast: AlertService.isToast(),
-                                    scoped: true
-                                },
-                                $scope.alerts
-                            )
-                        );
-                    }
-                }
-            ]
-        }
+                $('a[href]').click(function() {
+                    $('.fade').hide();
+                });
+            }
+        };
     });

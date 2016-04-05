@@ -17,12 +17,12 @@ public class MultiGame extends Game {
 
     public void start() {
         super.start();
-        statistics = new Statistics(
+        /*statistics = new Statistics(
             lobby.getUsers()
                 .stream()
                 .filter(LobbyUser::isActive)
                 .map(lobbyUser -> lobbyUser.getUser())
                 .collect(Collectors.toSet())
-        );
+        );*/
     }
 }

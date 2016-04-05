@@ -8,4 +8,9 @@ angular.module('dynablasterApp')
                 $location.path('/')
             });
         };
-    });
+    })
+    .controller('CreateGameController', function ($scope, $stateParams, $location) {
+    })
+    .controller('ListGameController', function ($scope, $stateParams, $location) {
+    })
+;

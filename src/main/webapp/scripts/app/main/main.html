@@ -12,12 +12,32 @@
                 <div class="panel panel-default" ng-switch-when="true">
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked nav-center">
-                            <li role="presentation"><a ui-sref="game({type:'single'})">Single player</a></li>
-                            <li role="presentation"><a ui-sref="game({type:'multi'})">Multi player</a></li>
-                            <li role="presentation"><a ui-sref="game({type:'bots'})">Play with bots</a></li>
+                            <li role="presentation"><a ui-sref="game_play({type:'single'})">Single player</a></li>
+                            <li role="presentation" ng-controller="ModalCtrl">
+                                <a ng-click="toggleModal()">Multi player</a>
+                                <modal title="Multi player - choose action" visible="showModal">
+                                    <div class="btn-group btn-group-justified" role="group">
+                                        <div class="btn-group btn-group-lg" role="group">
+                                            <a type="button" class="btn btn-info" ui-sref="game_create()">
+                                                <span class="glyphicon glyphicon-tent"></span>
+                                                Create game
+                                            </a>
+                                        </div>
+                                        <div class="btn-group btn-group-lg" role="group">
+                                            <a type="button" class="btn btn-success" ui-sref="game_list()">
+                                                <span class="glyphicon glyphicon-list-alt"></span>
+                                                List of games
+                                            </a>
+                                        </div>
+                                    </div>
+                                </modal>
+                            </li>
+                            <li role="presentation"><a ui-sref="game_play({type:'bots'})">Play with bots</a></li>
                         </ul>
                     </div>
                 </div>
+
+
 
                 <div class="alert alert-warning" ng-switch-when="false">
                     If you want to start the game you need <a class="alert-link" href="#/login">sign in</a> or can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
