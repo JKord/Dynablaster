@@ -215,9 +215,6 @@
             <column name="created_at" type="timestamp" defaultValueDate="${now}">
                 <constraints nullable="false"/>
             </column>
-            <column name="lobby_user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
 
         <createTable tableName="lobby_user">
@@ -225,6 +222,9 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lobby_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="is_active" type="boolean" valueBoolean="false">
@@ -251,11 +251,11 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="lobby_user_id"
-                                 baseTableName="lobby"
-                                 constraintName="fk_lobby_user"
-                                 referencedColumnNames="id"
-                                 referencedTableName="lobby_user"/>
+        <!--<addForeignKeyConstraint baseColumnNames="lobby_user_id"-->
+                                 <!--baseTableName="lobby"-->
+                                 <!--constraintName="fk_lobby_user"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--referencedTableName="lobby_user"/>-->
 
         <addForeignKeyConstraint baseColumnNames="user_won_id"
                                  baseTableName="statistics"

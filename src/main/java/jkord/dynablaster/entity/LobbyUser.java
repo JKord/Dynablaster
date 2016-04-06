@@ -12,11 +12,15 @@ public class LobbyUser extends BaseEntity {
     @ManyToOne
     protected User user;
 
+    @ManyToOne
+    protected Lobby lobby;
+
     @Column(name = "is_active", length = 1)
     protected boolean isActive = false;
 
-    public LobbyUser(User user) {
+    public LobbyUser(User user, Lobby lobby) {
         this.user = user;
+        this.lobby = lobby;
     }
 
     public User getUser() {
@@ -25,6 +29,14 @@ public class LobbyUser extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Lobby getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
     }
 
     public boolean isActive() {

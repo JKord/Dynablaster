@@ -9,7 +9,14 @@ angular.module('dynablasterApp')
             });
         };
     })
-    .controller('CreateGameController', function ($scope, $stateParams, $location) {
+    .controller('CreateGameController', function ($scope, $stateParams, gameService) {
+        $scope.create = function() {
+            gameService.createLobby($scope.lobby).then(function (data) {
+                console.log(data);
+            }).catch(function (response) {
+                console.log(response);
+            });
+        }
     })
     .controller('GameController', function ($scope, $stateParams) {
         $scope.game = {

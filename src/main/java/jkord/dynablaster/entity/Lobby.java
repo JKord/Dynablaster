@@ -61,11 +61,11 @@ public class Lobby extends BaseEntity implements Serializable {
 
     public void addUser(User user) {
         countUsers++;
-        lobbyUsers.add(new LobbyUser(user));
+        lobbyUsers.add(new LobbyUser(user, this));
     }
 
     public void removeUser(User user) {
         countUsers--;
-        lobbyUsers.remove(new LobbyUser(user));
+        lobbyUsers.remove(new LobbyUser(user, this));
     }
 }

@@ -42,6 +42,11 @@ angular.module('dynablasterApp')
                 this.stompClient.subscribe(name, function(msg){
                     action(JSON.parse(msg.body));
                 });
+            },
+            createLobby: function(lobby) {
+                return $http.put('/api/game/lobby/create', lobby).then(function (response) {
+                    return response.data;
+                });
             }
         }
     });
