@@ -1,0 +1,15 @@
+<div ng-cloak>
+    <div class="row">
+        <div class="col-md-2">
+            <h1>List of games</h1>
+        </div>
+        <div class="col-md-8">
+            <div class="list-group">
+                <a ui-sref="game({id:game.id})" class="list-group-item" ng-repeat="(key, game) in games">
+                    <span class="label label-default label-pill pull-right">2</span>
+                    {{game.name}}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

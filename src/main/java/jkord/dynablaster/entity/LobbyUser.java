@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "lobby_user")
 public class LobbyUser extends BaseEntity {
 
-    @OneToMany
+    @ManyToOne
     protected User user;
 
     @Column(name = "is_active", length = 1)

@@ -1,12 +1,20 @@
 <div ng-cloak>
     <div class="row">
-        <div class="col-md-2">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success btn-small" ng-click="endGame()">Go out</button>
+        <div class="col-md-3">
+           <h1>{{game.name}}</h1>
+            <div ng-switch="game.isOwner">
+                <button ng-switch-when="true" ng-click="startGame()" type="button" class="btn btn-success">Start game</button>
+                <p ng-switch-when="false">Wait for start</p>
             </div>
         </div>
-        <div class="col-md-8">
-            <game-window type-game="typeGame"></game-window>
+        <div class="col-md-6">
+            <h3>Connected users:</h3>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="(key, user) in game.users">
+                    <span class="label label-default label-pill pull-right">Ready</span>
+                    {{user.name}}
+                </li>
+            </ul>
         </div>
     </div>
 </div>

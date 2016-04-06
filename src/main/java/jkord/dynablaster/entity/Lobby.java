@@ -2,6 +2,7 @@ package jkord.dynablaster.entity;
 
 import jkord.core.domain.BaseEntity;
 import jkord.core.domain.User;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -15,19 +16,32 @@ import java.util.Set;
 @Table(name = "lobby")
 public class Lobby extends BaseEntity implements Serializable {
 
+    @NotNull
+    @Length(min = 3, max = 255)
+    @Column(name = "name", length = 255)
+    protected String name;
+
     @Column(name = "count_users", length = 1)
     protected short countUsers = 0;
 
     @Column(name = "is_active", length = 1)
     protected boolean isActive = false;
 
-    @CreatedDate
     @NotNull
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
-    private ZonedDateTime createdAt = ZonedDateTime.now();
+    protected ZonedDateTime createdAt = ZonedDateTime.now();
 
-    @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected Set<LobbyUser> lobbyUsers = new HashSet<>(4);
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public short getCountUsers() {
         return countUsers;

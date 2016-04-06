@@ -9,11 +9,10 @@ angular.module('dynablasterApp')
                 data: { authorities: ['ROLE_USER'] },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/game/game.html',
-                        controller: 'GameController'
+                        templateUrl: 'scripts/app/game/window.html',
+                        controller: 'WindowGameController'
                     }
-                },
-                resolve: {}
+                }
             })
             .state('game_create', {
                 parent: 'site',
@@ -21,11 +20,10 @@ angular.module('dynablasterApp')
                 data: { authorities: ['ROLE_USER'] },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/game/gameCreate.html',
+                        templateUrl: 'scripts/app/game/create.html',
                         controller: 'CreateGameController'
                     }
-                },
-                resolve: {}
+                }
             })
             .state('game_list', {
                 parent: 'site',
@@ -33,11 +31,21 @@ angular.module('dynablasterApp')
                 data: { authorities: ['ROLE_USER'] },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/game/gameList.html',
+                        templateUrl: 'scripts/app/game/list.html',
                         controller: 'ListGameController'
                     }
-                },
-                resolve: {}
+                }
+            })
+            .state('game', {
+                parent: 'site',
+                url: '/game/:id',
+                data: { authorities: ['ROLE_USER'] },
+                views: {
+                    'content@': {
+                        templateUrl: 'scripts/app/game/game.html',
+                        controller: 'GameController'
+                    }
+                }
             })
         ;
     });

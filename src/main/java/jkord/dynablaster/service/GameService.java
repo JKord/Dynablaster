@@ -28,7 +28,7 @@ public class GameService {
     private static ExecutorService executorService;
 
     @Inject
-    private UserService sUser;
+    private UserService userService;
 
     @Inject
     protected MessagingService sMessaging;
@@ -54,7 +54,7 @@ public class GameService {
         switch (type) {
             case SINGLE: {
                 game = new SingleGame(key);
-                User user = sUser.getUserWithAuthorities();
+                User user = userService.getUserWithAuthorities();
                 ((SingleGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
@@ -63,7 +63,7 @@ public class GameService {
             } break;
             case BOTS: {
                 game = new SingleWithBotsGame(key);
-                User user = sUser.getUserWithAuthorities();
+                User user = userService.getUserWithAuthorities();
                 ((SingleWithBotsGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;

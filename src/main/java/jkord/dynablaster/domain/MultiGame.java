@@ -2,10 +2,6 @@ package jkord.dynablaster.domain;
 
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Lobby;
-import jkord.dynablaster.entity.LobbyUser;
-import jkord.dynablaster.entity.Statistics;
-
-import java.util.stream.Collectors;
 
 public class MultiGame extends Game {
     protected Lobby lobby = new Lobby();

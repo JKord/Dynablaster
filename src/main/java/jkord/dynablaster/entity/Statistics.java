@@ -11,7 +11,7 @@ import java.util.*;
 @Table(name = "statistics")
 public class Statistics extends BaseEntity implements Serializable {
 
-    @OneToMany
+    @ManyToOne
     protected User userWon;
 
     @ManyToMany(fetch = FetchType.EAGER)
