@@ -13,7 +13,7 @@ public class MultiGame extends Game {
 
     public void start() {
         super.start();
-        /*statistics = new Statistics(
+        /*statistics = new Statistic(
             lobby.getUsers()
                 .stream()
                 .filter(LobbyUser::isActive)

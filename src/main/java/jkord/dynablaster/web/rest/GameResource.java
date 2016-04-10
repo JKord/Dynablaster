@@ -3,7 +3,7 @@ package jkord.dynablaster.web.rest;
 import jkord.core.security.AuthoritiesConstants;
 import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.entity.Statistics;
+import jkord.dynablaster.entity.Statistic;
 import jkord.dynablaster.service.GameService;
 import jkord.dynablaster.web.dto.GameDTO;
 import org.springframework.http.MediaType;
@@ -35,13 +35,13 @@ public class GameResource {
     }
 
     @RequestMapping(value = "/end", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Statistics end(HttpSession session) {
+    public Statistic end(HttpSession session) {
         IGame game = gameService.getGame(session);
         if (game != null) {
             gameService.endGame(game);
             session.setAttribute(IGame.KEY_NAME, null);
         }
 
-        return game.getStatistics();
+        return game.getStatistic();
     }
 }

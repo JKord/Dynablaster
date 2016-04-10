@@ -75,6 +75,7 @@ public class DatabaseConfiguration {
         if (metricRegistry != null) {
             config.setMetricRegistry(metricRegistry);
         }
+
         return new HikariDataSource(config);
     }
     @Bean
@@ -89,6 +90,7 @@ public class DatabaseConfiguration {
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setShouldRun(liquibaseProperties.isEnabled());
+
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
             if ("org.h2.jdbcx.JdbcDataSource".equals(dataSourceProperties.getDriverClassName())) {
                 liquibase.setShouldRun(true);

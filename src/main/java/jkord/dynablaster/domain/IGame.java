@@ -2,7 +2,7 @@ package jkord.dynablaster.domain;
 
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.entity.Statistics;
+import jkord.dynablaster.entity.Statistic;
 
 public interface IGame extends Runnable {
     String KEY_NAME = "gameKey";
@@ -21,5 +21,5 @@ public interface IGame extends Runnable {
     void setMap(GameMap map);
 
     PlayerObject getCurrentPlayer(Long id);
-    Statistics getStatistics();
+    Statistic getStatistic();
 }

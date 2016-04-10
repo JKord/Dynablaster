@@ -9,12 +9,23 @@ angular.module('dynablasterApp')
             });
         };
     })
-    .controller('CreateGameController', function ($scope, $stateParams, gameService) {
+    .controller('CreateGameController', function ($scope, $location, $stateParams, gameService) {
+        $scope.lobbyForm = { name: null };
         $scope.create = function() {
-            gameService.createLobby($scope.lobby).then(function (data) {
-                console.log(data);
-            }).catch(function (response) {
+            $scope.lobbyForm = { name: null };
+            gameService.createLobby($scope.lobby).then(function (response) {
                 console.log(response);
+                if (response.status != 400) {
+                    $location.path('/game/' + response.id);
+                }
+            }).catch(function (response) {
+                if (response.data.fieldErrors) {
+                    response.data.fieldErrors.forEach(function(error) {
+                        $scope.lobbyForm[error.field] = { msg: error.message };
+                    });
+                } else {
+                    alert(response.data.message);
+                }
             });
         }
     })

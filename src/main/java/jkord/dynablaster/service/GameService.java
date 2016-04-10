@@ -15,6 +15,7 @@ import jkord.dynablaster.web.MsgRoute;
 import jkord.dynablaster.web.dto.MapPositionObject;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -33,18 +34,17 @@ public class GameService {
     @Inject
     protected MessagingService sMessaging;
 
-    @Inject
-    public GameService(MessagingService messagingService) {
+    @PostConstruct
+    private void init() {
+        PlayerObject.SMessaging = sMessaging;
+        BotObject.SMessaging = sMessaging;
+
         executorService = Executors.newCachedThreadPool(
             new ThreadFactoryBuilder()
-            .setNameFormat("game-%d")
-            .setDaemon(true)
-            .build()
+                .setNameFormat("game-%d")
+                .setDaemon(true)
+                .build()
         );
-
-        // FIXME
-        PlayerObject.SMessaging = messagingService;
-        BotObject.SMessaging = messagingService;
     }
 
     public IGame createGame(GameType type) {
@@ -140,6 +140,7 @@ public class GameService {
         player.move(Direction.valueOf(direction.toUpperCase()));
         sMessaging.send(String.format(MsgRoute.PLAYER_MOVE, player.getId()), player.getPosition());
     }
+
     public void bombBurst(User user, IGame game, Position position) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.putBomb(position);

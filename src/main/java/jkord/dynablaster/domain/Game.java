@@ -2,7 +2,7 @@ package jkord.dynablaster.domain;
 
 import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.entity.Statistics;
+import jkord.dynablaster.entity.Statistic;
 
 abstract class Game implements IGame {
 
@@ -10,9 +10,9 @@ abstract class Game implements IGame {
     protected GameMap map;
     protected GameType type;
 
-    protected Statistics statistics;
+    protected Statistic statistic;
 
-    protected boolean isRun = false;
+    protected volatile boolean isRun = false;
 
     public Game(String key) {
         this.key = key;
@@ -39,12 +39,12 @@ abstract class Game implements IGame {
         this.map = map;
     }
 
-    public Statistics getStatistics() {
-        return statistics;
+    public Statistic getStatistic() {
+        return statistic;
     }
 
-    public void setStatistics(Statistics statistics) {
-        this.statistics = statistics;
+    public void setStatistic(Statistic statistic) {
+        this.statistic = statistic;
     }
 
     public PlayerObject getCurrentPlayer(Long id) {

@@ -9,12 +9,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "lobby")
-public class Lobby extends BaseEntity implements Serializable {
+public class Lobby extends BaseEntity {
 
     @NotNull
     @Length(min = 3, max = 255)
@@ -33,7 +33,7 @@ public class Lobby extends BaseEntity implements Serializable {
     protected ZonedDateTime createdAt = ZonedDateTime.now();
 
     @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    protected Set<LobbyUser> lobbyUsers = new HashSet<>(4);
+    protected List<LobbyUser> lobbyUsers = new ArrayList<>(4);
 
     public String getName() {
         return name;
@@ -51,11 +51,15 @@ public class Lobby extends BaseEntity implements Serializable {
         return isActive;
     }
 
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public void setActive(boolean active) {
         isActive = active;
     }
 
-    public Set<LobbyUser> getUsers() {
+    public List<LobbyUser> getUsers() {
         return lobbyUsers;
     }
 

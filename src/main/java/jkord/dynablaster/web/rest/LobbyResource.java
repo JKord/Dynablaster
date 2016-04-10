@@ -4,6 +4,7 @@ import jkord.core.security.AuthoritiesConstants;
 import jkord.dynablaster.entity.Lobby;
 import jkord.dynablaster.repository.LobbyRepository;
 import jkord.dynablaster.service.LobbyService;
+import jkord.dynablaster.web.dto.LobbyDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 @Secured(AuthoritiesConstants.USER)
@@ -27,12 +30,11 @@ public class LobbyResource {
 
     @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Lobby> create(@Valid @RequestBody Lobby lobby) {
+    public ResponseEntity<?> create(@Valid @RequestBody Lobby lobby) throws URISyntaxException {
         lobbyService.create(lobby);
-
-        lobby.getUsers().clear(); // FIXME
-
-        return new ResponseEntity<>(lobby, HttpStatus.CREATED);
+        return ResponseEntity.created(
+            new URI(String.format("/api/game/lobby/%d/get", lobby.getId())))
+            .body(new LobbyDTO(lobby, true));
     }
 
     @Transactional(readOnly = true)

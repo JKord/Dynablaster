@@ -50,10 +50,11 @@ public class LobbyUser extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-
         if (o == null || getClass() != o.getClass())
             return false;
+        LobbyUser lobbyUser = (LobbyUser) o;
 
-        return user.equals(o);
+        return user.getId().equals(lobbyUser.getUser().getId())
+            && lobby.getId().equals(lobbyUser.getLobby().getId());
     }
 }

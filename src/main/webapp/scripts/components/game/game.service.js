@@ -5,6 +5,7 @@ angular.module('dynablasterApp')
         return {
             socket: null,
             stompClient: null,
+            data: {},
             startGame: function (type) {
                 return $http.put('api/game/start/' + type).then(function (response) {
                     return response.data;
