@@ -1,12 +1,15 @@
 package jkord.dynablaster.service;
 
+import jkord.core.domain.User;
 import jkord.core.service.UserService;
 import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.entity.Lobby;
+import jkord.dynablaster.entity.LobbyUser;
 import jkord.dynablaster.repository.LobbyRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 @Service
 public class LobbyService {
@@ -18,16 +21,31 @@ public class LobbyService {
     private LobbyRepository lobbyRepository;
 
     public void create(Lobby lobby) {
-        lobby.addUser(userService.getUserWithAuthorities());
+        User owner = userService.getUserWithAuthorities();
+        lobby.setOwner(owner);
+        lobby.addUser(owner);
         lobbyRepository.save(lobby);
-        //lobbyRepository.flush();
     }
 
     public Lobby findOneActiveById(Long lobbyId) {
-        Lobby lobby = lobbyRepository.findOne(lobbyId);
-        if (lobby.isActive())
+        Lobby lobby = lobbyRepository.findOneById(lobbyId);
+        if (! lobby.isActive())
             return lobby;
 
         throw new CustomParameterizedException("Game started");
+    }
+
+    public void addUserToLobby(Long lobbyId) {
+        Lobby lobby = findOneActiveById(lobbyId);
+        User user = userService.getUserWithAuthorities();
+
+        for (LobbyUser lobbyUser: lobby.getUsers()) {
+            if (lobbyUser.getId().equals(user.getId())) {
+                return;
+            }
+        }
+
+        lobby.addUser(user);
+        lobbyRepository.save(lobby);
     }
 }

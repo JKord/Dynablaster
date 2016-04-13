@@ -13,7 +13,7 @@ angular.module('dynablasterApp')
         $scope.lobbyForm = { name: null };
         $scope.create = function() {
             $scope.lobbyForm = { name: null };
-            gameService.createLobby($scope.lobby).then(function (response) {
+            gameService.lobbyCreate($scope.lobby).then(function (response) {
                 console.log(response);
                 if (response.status != 400) {
                     $location.path('/game/' + response.id);
@@ -29,31 +29,60 @@ angular.module('dynablasterApp')
             });
         }
     })
-    .controller('GameController', function ($scope, $stateParams) {
-        $scope.game = {
-            name: 'Game' + $stateParams.id,
-            users: [
-                {name: 'user 1'},
-                {name: 'user 2'},
-                {name: 'user 3'},
-                {name: 'user 4'},
-                {name: 'user 5'}
-            ],
-            isOwner: true
+    .controller('GameController', function ($scope, $location, $stateParams, $cookies, gameService) {
+
+        $scope.startGame = function () {
+           window.location = '#/game/play/multi';
         };
 
-        $scope.startGame = function() {
-            window.location = '#/game/play/single';
+        function updateLobby(isAddUser) {
+            gameService.lobbyGetFromServer($stateParams.id).then(function (data) {
+                $scope.game = data;
+                gameService.lobbySet(data);
+
+                if (isAddUser && !data.owner) {
+                    gameService.lobbyAddUser(data.id).then(function () {
+                        updateLobby(false);
+                    });
+                }
+
+                console.log($scope.game.id);
+
+                if (! data.owner) {
+                    gameService.stompSubscribe('/game/start/' + $scope.game.id, function(gameInfo) {
+                        console.log(gameInfo.key);
+                        $cookies.put('gameKey', gameInfo.key);
+                        $scope.startGame();
+                    });
+                }
+            }).catch(function (response) {
+                alert(response.data.message);
+                setTimeout(function() {
+                    $location.path('/game/list');
+                }, 100)
+            });
         }
+
+        if (gameService.isLobbyGet()) {
+            $scope.game = gameService.lobbyGet();
+        } else {
+            updateLobby(true);
+        }
+
+        $scope.switchStatus = function() {
+
+        };
+
+        $scope.updateLobbyUsers = function() {
+            $scope.game.users = [];
+            updateLobby(false);
+        };
     })
-    .controller('ListGameController', function ($scope) {
-        $scope.games = [
-            {id: 1, name: 'Game 1'},
-            {id: 2, name: 'Game 2'},
-            {id: 3, name: 'Game 3'},
-            {id: 4, name: 'Game 4'},
-            {id: 5, name: 'Game 5'},
-            {id: 6, name: 'Game 6'}
-        ];
+    .controller('ListGameController', function ($scope, gameService) {
+        gameService.socketInit();
+        gameService.lobbySet(null);
+        gameService.lobbyList().then(function (data) {
+            $scope.games = data;
+        });
     })
 ;

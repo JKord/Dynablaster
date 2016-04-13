@@ -1,44 +1,29 @@
 package jkord.dynablaster.web.dto;
 
+import jkord.core.domain.User;
 import jkord.dynablaster.entity.Lobby;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-public class LobbyDTO implements Serializable {
+public class LobbyDTO extends LobbyInfoDTO implements Serializable {
 
-    private Long id;
-    private String name;
-    private short countUsers = 0;
     private boolean isActive = false;
     private ZonedDateTime createdAt;
     private List<LobbyUserDTO> users;
     private boolean isOwner;
 
-    public LobbyDTO(Lobby lobby, boolean isOwner) {
-        id = lobby.getId();
-        name = lobby.getName();
-        countUsers = lobby.getCountUsers();
+    public LobbyDTO(Lobby lobby, User owner) {
+        super(lobby);
+
         createdAt = lobby.getCreatedAt();
         isActive = lobby.isActive();
-        this.isOwner = isOwner;
+        this.isOwner = lobby.getOwner().equals(owner);
 
-        users = new LinkedList<>();
+        users = new ArrayList<>(4);
         lobby.getUsers().forEach(lobbyUser -> users.add(new LobbyUserDTO(lobbyUser)));
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public short getCountUsers() {
-        return countUsers;
     }
 
     public boolean isActive() {

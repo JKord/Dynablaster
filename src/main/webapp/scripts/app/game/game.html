@@ -1,18 +1,23 @@
 <div ng-cloak>
     <div class="row">
         <div class="col-md-3">
-           <h1>{{game.name}}</h1>
-            <div ng-switch="game.isOwner">
-                <button ng-switch-when="true" ng-click="startGame()" type="button" class="btn btn-success">Start game</button>
+            <a href="#/game/list">Go to list</a>
+            <h1>{{game.name}}</h1>
+            <hr>
+            <div ng-switch="game.owner">
+                <toggle-switch ng-model="game.currentLobbyUser.active" on-change="switchStatus()" knob-label="<>" on-label="Ready" off-label="Not ready"></toggle-switch>
+                <br><br>
+                <button ng-switch-when="true" ng-click="startGame()" type="button" class="btn btn-success btn-group-sm">Start game</button>
                 <p ng-switch-when="false">Wait for start</p>
             </div>
         </div>
         <div class="col-md-6">
-            <h3>Connected users:</h3>
+            <h3><span class="glyphicon glyphicon-refresh text-primary" ng-click="updateLobbyUsers()"></span>  Connected users:</h3>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="(key, user) in game.users">
-                    <span class="label label-default label-pill pull-right">Ready</span>
-                    {{user.name}}
+                <li class="list-group-item" ng-repeat="(key, userInfo) in game.users">
+                    <span class="label label-success label-pill pull-right" ng-if="userInfo.active">Ready</span>
+                    <span class="label label-default label-pill pull-right" ng-if="!userInfo.active">Not ready</span>
+                    {{userInfo.user.fullName}}
                 </li>
             </ul>
         </div>

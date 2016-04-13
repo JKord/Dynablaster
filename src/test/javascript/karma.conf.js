@@ -23,6 +23,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-resource/angular-resource.js',
             'main/webapp/bower_components/angular-sanitize/angular-sanitize.js',
             'main/webapp/bower_components/angular-ui-router/release/angular-ui-router.js',
+            'main/webapp/bower_components/angular-bootstrap-toggle-switch/angular-toggle-switch.js',
             'main/webapp/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
             'main/webapp/bower_components/json3/lib/json3.js',
             'main/webapp/bower_components/ng-file-upload/ng-file-upload.js',

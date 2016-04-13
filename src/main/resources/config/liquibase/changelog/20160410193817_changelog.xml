@@ -141,6 +141,7 @@
             </column>
             <column name="is_active" type="BOOLEAN"/>
             <column name="name" type="VARCHAR(255)"/>
+            <column name="owner_id" type="bigint"/>
         </createTable>
 
         <createTable tableName="lobby_lobby_users">
@@ -206,6 +207,7 @@
         <addForeignKeyConstraint baseColumnNames="userWon_id" baseTableName="statistic" constraintName="FK_c6uim2o7gwylgksloktcqks3r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="lobby_id" baseTableName="lobby_lobby_users" constraintName="FK_ma1rkcs7h1x5dj3u8dqbhp09x" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lobby"/>
         <addForeignKeyConstraint baseColumnNames="lobby_users_id" baseTableName="lobby_lobby_users" constraintName="FK_dsljglc75l41up6laww0bqt1a" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lobby_user"/>
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="lobby" constraintName="FK_4are7rfi2e1h4s1keu9gah547" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="lobby_user" constraintName="FK_t2jnpp7ubkip93ulaymoc4s5p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="usersPlayed_id" baseTableName="statistic_user" constraintName="FK_l9e9agmmlk843xrjxqfx97hpp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="statistic_id" baseTableName="statistic_user" constraintName="FK_qlh96xy8o0jfepsl83salq03" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="statistic"/>

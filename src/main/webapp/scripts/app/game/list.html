@@ -6,9 +6,12 @@
         <div class="col-md-8">
             <div class="list-group">
                 <a ui-sref="game({id:game.id})" class="list-group-item" ng-repeat="(key, game) in games">
-                    <span class="label label-default label-pill pull-right">2</span>
+                    <span class="label label-default label-pill pull-right">{{game.countUsers}}</span>
                     {{game.name}}
                 </a>
+            </div>
+            <div class="alert alert-warning" role="alert" ng-show="isEmpty(games)">
+                <p>List is empty</p>
             </div>
         </div>
     </div>

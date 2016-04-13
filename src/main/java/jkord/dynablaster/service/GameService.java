@@ -11,7 +11,11 @@ import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.entity.Lobby;
+import jkord.dynablaster.entity.LobbyUser;
+import jkord.dynablaster.repository.LobbyRepository;
 import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.GameDTO;
 import jkord.dynablaster.web.dto.MapPositionObject;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +32,11 @@ public class GameService {
     private static final Map<String, String> usersKeys = new HashMap<>();
     private static ExecutorService executorService;
 
-    @Inject
-    private UserService userService;
+    @Inject private UserService userService;
+    @Inject private LobbyService lobbyService;
+    @Inject private LobbyRepository rlobby;
 
-    @Inject
-    protected MessagingService sMessaging;
+    @Inject protected MessagingService sMessaging;
 
     @PostConstruct
     private void init() {
@@ -47,7 +51,7 @@ public class GameService {
         );
     }
 
-    public IGame createGame(GameType type) {
+    public IGame createGame(GameType type, Long lobbyId) {
         String key = RandomUtil.generateKeyGame();
 
         IGame game;
@@ -58,8 +62,16 @@ public class GameService {
                 ((SingleGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
-            case MULTI: { // TODO
+            case MULTI: {
                 game = new MultiGame(key);
+                Lobby lobby = rlobby.findOneById(lobbyId);
+                ((MultiGame) game).start(lobby);
+
+                lobby.getUsers().forEach(lobbyUser -> addUserKey(lobbyUser.getUser().getLogin(), key));
+                sMessaging.send(String.format(MsgRoute.GAME_START, lobby.getId()), new GameDTO(game));
+
+                lobby.setActive(true);
+                rlobby.save(lobby);
             } break;
             case BOTS: {
                 game = new SingleWithBotsGame(key);
@@ -89,8 +101,9 @@ public class GameService {
             case SINGLE: case BOTS: {
                 removeUserKey(((SingleGame) game).getUser().getLogin());
             } break;
-            case MULTI: { // TODO
-
+            case MULTI: {
+                Lobby lobby = ((MultiGame) game).getLobby();
+                lobby.getUsers().forEach(lobbyUser -> removeUserKey(lobbyUser.getUser().getLogin()));
             } break;
             default: {
                 throw new CustomParameterizedException("Game type is not supported");
@@ -130,6 +143,13 @@ public class GameService {
     public User getUserInGamaByName(IGame game, String name) {
         if (game instanceof SingleGame) {
             return ((SingleGame) game).getUser();
+        }
+
+        if (game instanceof MultiGame) {
+            for (LobbyUser lobbyUser : ((MultiGame) game).getLobby().getUsers()) {
+                if (lobbyUser.getUser().getLogin().equals(name))
+                    return lobbyUser.getUser();
+            }
         }
 
         return null;

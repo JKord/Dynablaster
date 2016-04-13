@@ -18,6 +18,8 @@ public class LobbyUser extends BaseEntity {
     @Column(name = "is_active", length = 1)
     protected boolean isActive = false;
 
+    public LobbyUser() { }
+
     public LobbyUser(User user, Lobby lobby) {
         this.user = user;
         this.lobby = lobby;

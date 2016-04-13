@@ -2,7 +2,7 @@
 
 angular.module('dynablasterApp', ['LocalStorageModule',
     'ngResource', 'ngCookies', 'ngAria', 'ngCacheBuster', 'ngFileUpload',
-    'ui.bootstrap', 'ui.router',  'infinite-scroll', 'angular-loading-bar'])
+    'ui.bootstrap', 'ui.router',  'infinite-scroll', 'angular-loading-bar', 'toggle-switch'])
 
     .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION) {
 
@@ -47,7 +47,7 @@ angular.module('dynablasterApp', ['LocalStorageModule',
             }
         };
     })
-    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,  httpRequestInterceptorCacheBusterProvider, AlertServiceProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,  httpRequestInterceptorCacheBusterProvider, AlertServiceProvider, localStorageServiceProvider) {
         // uncomment below to make alerts look like toast
         //AlertServiceProvider.showAsToast(true);
 
@@ -79,10 +79,9 @@ angular.module('dynablasterApp', ['LocalStorageModule',
         $httpProvider.interceptors.push('errorHandlerInterceptor');
         $httpProvider.interceptors.push('authExpiredInterceptor');
         $httpProvider.interceptors.push('notificationInterceptor');
-        // jhipster-needle-angularjs-add-interceptor JHipster will add new application interceptor here
 
+        localStorageServiceProvider.setStorageType('sessionStorage');
     })
-    // jhipster-needle-angularjs-add-config JHipster will add new application configuration here
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactory) {
         $urlMatcherFactory.type('boolean', {
             name : 'boolean',
