@@ -6,6 +6,7 @@ angular.module('dynablasterApp')
             socket: null,
             stompClient: null,
             data: {},
+            subscribes: [],
             startGame: function (type) {
                 return $http.put('api/game/start/' + type).then(function (response) {
                     return response.data;
@@ -48,9 +49,12 @@ angular.module('dynablasterApp')
                 this.stompClient.send('/app/' + name, {}, JSON.stringify(data));
             },
             stompSubscribe: function(name, action) {
-                this.stompClient.subscribe(name, function(msg){
-                    action(JSON.parse(msg.body));
-                });
+                if (this.subscribes.indexOf(name) == -1) {
+                    this.stompClient.subscribe(name, function(msg){
+                        action(JSON.parse(msg.body));
+                    });
+                    this.subscribes.push(name);
+                }
             },
 
             // ---------------------------------------- Lobby ----------------------------------------------------------
@@ -67,17 +71,22 @@ angular.module('dynablasterApp')
             isLobbyGet: function() {
                 return localStorageService.get('lobby') != null;
             },
-            lobbyGetFromServer: function(id) {
-                return $http.get('/api/game/lobby/' + id + '/get').then(function(response) {
+            lobbySetCurrentUser: function(data) {
+                if (data.users) {
                     Principal.identity().then(function(user) {
-                        response.data.users.forEach(function(lobbyUser) {
+                        data.users.forEach(function(lobbyUser) {
                             if (lobbyUser.user.id == user.id) {
-                                response.data.currentLobbyUser = lobbyUser;
+                                data.currentLobbyUser = lobbyUser;
                                 return true;
                             }
                         });
                     });
-
+                }
+            },
+            lobbyGetFromServer: function(id) {
+                var self = this;
+                return $http.get('/api/game/lobby/' + id + '/get').then(function(response) {
+                    self.lobbySetCurrentUser(response.data);
                     return response.data;
                 });
             },
@@ -101,6 +110,7 @@ angular.module('dynablasterApp')
                     $cookies.put('lobbyId', null);
                     $cookies.put('gameKey', null);
                 }
+                this.lobbySetCurrentUser(lobby);
 
                 return localStorageService.set('lobby', lobby);
             }

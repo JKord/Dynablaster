@@ -10,8 +10,7 @@ import javax.inject.Inject;
 
 abstract class BaseGameController {
 
-    @Inject
-    protected GameService gameService;
+    @Inject protected GameService gameService;
 
     protected IGame getGame(SimpMessageHeaderAccessor headerAccessor) {
         String key = (String) headerAccessor.getSessionAttributes().get(IGame.KEY_NAME);

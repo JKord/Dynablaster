@@ -17,6 +17,7 @@ import jkord.dynablaster.repository.LobbyRepository;
 import jkord.dynablaster.web.MsgRoute;
 import jkord.dynablaster.web.dto.GameDTO;
 import jkord.dynablaster.web.dto.MapPositionObject;
+import jkord.dynablaster.web.dto.PlayerMoveInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -158,7 +159,10 @@ public class GameService {
     public void movePlayer(User user, IGame game, String direction) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.move(Direction.valueOf(direction.toUpperCase()));
-        sMessaging.send(String.format(MsgRoute.PLAYER_MOVE, player.getId()), player.getPosition());
+        sMessaging.send(
+            String.format(MsgRoute.PLAYER_MOVE, player.getId()),
+            new PlayerMoveInfo(player, direction)
+        );
     }
 
     public void bombBurst(User user, IGame game, Position position) {

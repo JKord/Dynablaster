@@ -10,6 +10,7 @@ public class MsgRoute {
     ;
 
     public static final String
-        LOBBY_GET = "/api/game/lobby/%d/get"
+        LOBBY_GET = "/api/game/lobby/%d/get",
+        LOBBY_UPDATE = "/game/lobby/%d/update"
     ;
 }

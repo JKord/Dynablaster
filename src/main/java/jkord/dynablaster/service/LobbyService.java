@@ -6,20 +6,19 @@ import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.entity.Lobby;
 import jkord.dynablaster.entity.LobbyUser;
 import jkord.dynablaster.repository.LobbyRepository;
+import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.LobbyDTO;
 import org.springframework.stereotype.Service;
-
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Objects;
 
 @Service
 public class LobbyService {
 
-    @Inject
-    private UserService userService;
+    @Inject private UserService userService;
 
-    @Inject
-    private LobbyRepository lobbyRepository;
+    @Inject private LobbyRepository lobbyRepository;
+
+    @Inject private MessagingService sMessaging;
 
     public void create(Lobby lobby) {
         User owner = userService.getUserWithAuthorities();
@@ -44,8 +43,7 @@ public class LobbyService {
         }
 
         User user = userService.getUserWithAuthorities();
-
-        for (LobbyUser lobbyUser: lobby.getUsers()) {
+        for (LobbyUser lobbyUser : lobby.getUsers()) {
             if (lobbyUser.getId().equals(user.getId())) {
                 return;
             }
@@ -53,12 +51,30 @@ public class LobbyService {
 
         lobby.addUser(user);
         lobbyRepository.save(lobby);
+        sendMsgLobbyUpdate(lobby);
     }
 
     public void removeUserFromLobby(Long lobbyId) {
         Lobby lobby = findOneActiveById(lobbyId);
-        User user = userService.getUserWithAuthorities();
-        lobby.removeUser(user);
+        lobby.removeUser(userService.getUserWithAuthorities());
         lobbyRepository.save(lobby);
+        sendMsgLobbyUpdate(lobby);
+    }
+
+    public void lobbyChangeUserStatus(Long lobbyId, User user, boolean active) {
+        Lobby lobby = findOneActiveById(lobbyId);
+        LobbyUser lobbyUser = lobby.getUsers()
+            .stream()
+            .filter(lUser -> lUser.getUser().equals(user))
+            .findFirst()
+            .get();
+        lobbyUser.setActive(active);
+
+        lobbyRepository.save(lobby);
+        sendMsgLobbyUpdate(lobby);
+    }
+
+    private void sendMsgLobbyUpdate(Lobby lobby) {
+        sMessaging.send(String.format(MsgRoute.LOBBY_UPDATE, lobby.getId()), new LobbyDTO(lobby, lobby.getOwner()));
     }
 }

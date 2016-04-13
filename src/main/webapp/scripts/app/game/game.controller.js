@@ -55,15 +55,20 @@ angular.module('dynablasterApp')
                     });
                 }
 
-                console.log($scope.game.id);
-
-                if (! data.owner) {
+                if (!data.owner) {
                     gameService.stompSubscribe('/game/start/' + $scope.game.id, function(gameInfo) {
                         console.log(gameInfo.key);
                         $cookies.put('gameKey', gameInfo.key);
                         $scope.startGame();
                     });
                 }
+
+                gameService.stompSubscribe('/game/lobby/' + $scope.game.id + '/update', function(gameInfo) {
+                    $scope.game = gameInfo;
+                    gameService.lobbySet($scope.game);
+                    $scope.$apply();
+                    console.log(gameInfo);
+                });
             }).catch(function (response) {
                 goToList(response.data.message);
             });
@@ -76,7 +81,13 @@ angular.module('dynablasterApp')
         }
 
         $scope.switchStatus = function() {
-
+            var lobby = gameService.lobbyGet();
+            /*setTimeout(function() {
+                gameService.sendMsg('/game/lobby/user/status', {
+                    lobbyId: lobby.id,
+                    active: ! lobby.currentLobbyUser.active
+                });
+            }, 500);*/
         };
 
         $scope.updateLobbyUsers = function() {

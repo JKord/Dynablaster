@@ -1,8 +1,8 @@
 <div ng-cloak>
     <div class="row">
         <div class="col-md-3">
-            <a href="#/game/list">Go to list</a>
-            <h1>{{game.name}}</h1>
+            <a href="#/game/list">Back to list</a>
+            <h1 ng-bind="game.name"></h1>
             <hr>
             <div ng-switch="game.owner">
                 <toggle-switch ng-model="game.currentLobbyUser.active" on-change="switchStatus()" knob-label="<>" on-label="Ready" off-label="Not ready"></toggle-switch>
