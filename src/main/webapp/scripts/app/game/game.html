@@ -8,7 +8,7 @@
                 <toggle-switch ng-model="game.currentLobbyUser.active" on-change="switchStatus()" knob-label="<>" on-label="Ready" off-label="Not ready"></toggle-switch>
                 <br><br>
                 <button ng-switch-when="true" ng-click="startGame()" type="button" class="btn btn-success btn-group-sm">Start game</button>
-                <p ng-switch-when="false">Wait for start</p>
+                <p ng-switch-when="false" class="alert alert-info" role="alert">Wait for start</p>
             </div>
         </div>
         <div class="col-md-6">

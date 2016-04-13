@@ -10,7 +10,7 @@
                     {{game.name}}
                 </a>
             </div>
-            <div class="alert alert-warning" role="alert" ng-show="isEmpty(games)">
+            <div class="alert alert-warning" role="alert" ng-show="!games.length">
                 <p>List is empty</p>
             </div>
         </div>

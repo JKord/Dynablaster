@@ -73,4 +73,12 @@ public class LobbyResource {
 
         return ResponseEntity.ok().body(id);
     }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/removeUser", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removeUser(@PathVariable Long id) {
+        lobbyService.removeUserFromLobby(id);
+
+        return ResponseEntity.ok().body(id);
+    }
 }

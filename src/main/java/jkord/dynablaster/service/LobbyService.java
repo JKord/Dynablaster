@@ -9,6 +9,7 @@ import jkord.dynablaster.repository.LobbyRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Service
@@ -37,6 +38,11 @@ public class LobbyService {
 
     public void addUserToLobby(Long lobbyId) {
         Lobby lobby = findOneActiveById(lobbyId);
+
+        if (lobby.getUsers().size() == 4) {
+            throw new CustomParameterizedException("Only 4 players can play in game");
+        }
+
         User user = userService.getUserWithAuthorities();
 
         for (LobbyUser lobbyUser: lobby.getUsers()) {
@@ -46,6 +52,13 @@ public class LobbyService {
         }
 
         lobby.addUser(user);
+        lobbyRepository.save(lobby);
+    }
+
+    public void removeUserFromLobby(Long lobbyId) {
+        Lobby lobby = findOneActiveById(lobbyId);
+        User user = userService.getUserWithAuthorities();
+        lobby.removeUser(user);
         lobbyRepository.save(lobby);
     }
 }

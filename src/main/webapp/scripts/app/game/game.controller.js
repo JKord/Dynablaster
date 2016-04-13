@@ -31,6 +31,13 @@ angular.module('dynablasterApp')
     })
     .controller('GameController', function ($scope, $location, $stateParams, $cookies, gameService) {
 
+        function goToList(message) {
+            alert(message);
+            setTimeout(function() {
+                $location.path('/game/list');
+            }, 100)
+        }
+
         $scope.startGame = function () {
            window.location = '#/game/play/multi';
         };
@@ -43,6 +50,8 @@ angular.module('dynablasterApp')
                 if (isAddUser && !data.owner) {
                     gameService.lobbyAddUser(data.id).then(function () {
                         updateLobby(false);
+                    }).catch(function (response) {
+                        goToList(response.data.message);
                     });
                 }
 
@@ -56,10 +65,7 @@ angular.module('dynablasterApp')
                     });
                 }
             }).catch(function (response) {
-                alert(response.data.message);
-                setTimeout(function() {
-                    $location.path('/game/list');
-                }, 100)
+                goToList(response.data.message);
             });
         }
 
@@ -80,7 +86,14 @@ angular.module('dynablasterApp')
     })
     .controller('ListGameController', function ($scope, gameService) {
         gameService.socketInit();
-        gameService.lobbySet(null);
+
+        var lobby = gameService.lobbyGet();
+        if (lobby != null) {
+            if (!lobby.owner)
+                gameService.lobbyRemoveUser(lobby.id);
+            gameService.lobbySet(null);
+        }
+
         gameService.lobbyList().then(function (data) {
             $scope.games = data;
         });

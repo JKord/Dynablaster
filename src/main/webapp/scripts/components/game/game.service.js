@@ -34,7 +34,8 @@ angular.module('dynablasterApp')
                     this.stompClient.debug = null;
                     this.stompClient.connect({}, connect);
                 } else {
-                    connect();
+                    if (connect)
+                        connect();
                 }
             },
             socketClose: function() {
@@ -82,6 +83,11 @@ angular.module('dynablasterApp')
             },
             lobbyAddUser: function(id) {
                 return $http.put('/api/game/lobby/' + id + '/addUser').then(function(response) {
+                    return response.data;
+                });
+            },
+            lobbyRemoveUser: function(id) {
+                return $http.delete('/api/game/lobby/' + id + '/removeUser').then(function(response) {
                     return response.data;
                 });
             },
