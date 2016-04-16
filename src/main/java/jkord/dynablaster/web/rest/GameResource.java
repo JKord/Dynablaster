@@ -1,6 +1,7 @@
 package jkord.dynablaster.web.rest;
 
 import jkord.core.security.AuthoritiesConstants;
+import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Statistic;
@@ -49,6 +50,8 @@ public class GameResource {
         if (game != null) {
             gameService.endGame(game);
             session.setAttribute(IGame.KEY_NAME, null);
+        } else {
+            throw new CustomParameterizedException("The game has been completed!");
         }
 
         return game.getStatistic();

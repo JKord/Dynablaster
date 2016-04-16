@@ -6,6 +6,8 @@ angular.module('dynablasterApp')
         $scope.endGame = function() {
             gameService.endGame().then(function(data) {
                 $location.path('/')
+            }).catch(function (response) {
+                $location.path('/')
             });
         };
     })
@@ -14,7 +16,6 @@ angular.module('dynablasterApp')
         $scope.create = function() {
             $scope.lobbyForm = { name: null };
             gameService.lobbyCreate($scope.lobby).then(function (response) {
-                console.log(response);
                 if (response.status != 400) {
                     $location.path('/game/' + response.id);
                 }
@@ -42,33 +43,36 @@ angular.module('dynablasterApp')
            window.location = '#/game/play/multi';
         };
 
-        function updateLobby(isAddUser) {
+        function updateLobby(isFirst) {
             gameService.lobbyGetFromServer($stateParams.id).then(function (data) {
                 $scope.game = data;
                 gameService.lobbySet(data);
 
-                if (isAddUser && !data.owner) {
-                    gameService.lobbyAddUser(data.id).then(function () {
-                        updateLobby(false);
-                    }).catch(function (response) {
-                        goToList(response.data.message);
+                if (isFirst) {
+                    if (!data.owner) {
+                        gameService.lobbyAddUser(data.id).then(function () {
+                            updateLobby(false);
+                        }).catch(function (response) {
+                            goToList(response.data.message);
+                        });
+
+                        gameService.stompSubscribe('/game/start/' + $scope.game.id, function(gameInfo) {
+                            console.log(gameInfo.key);
+                            $cookies.put('gameKey', gameInfo.key);
+                            setTimeout(function() {
+                                $scope.startGame();
+                            }, 150);
+                        });
+                    }
+
+                    var urlSubscribeLobbyUpdate = '/game/lobby/' + $scope.game.id + '/update';
+                    gameService.stompSubscribe(urlSubscribeLobbyUpdate, function(gameInfo) {
+                        $scope.game.users = gameInfo.users;
+                        $scope.game.urlSubscribeLobbyUpdate = urlSubscribeLobbyUpdate;
+                        gameService.lobbySet($scope.game);
+                        $scope.$apply();
                     });
                 }
-
-                if (!data.owner) {
-                    gameService.stompSubscribe('/game/start/' + $scope.game.id, function(gameInfo) {
-                        console.log(gameInfo.key);
-                        $cookies.put('gameKey', gameInfo.key);
-                        $scope.startGame();
-                    });
-                }
-
-                gameService.stompSubscribe('/game/lobby/' + $scope.game.id + '/update', function(gameInfo) {
-                    $scope.game = gameInfo;
-                    gameService.lobbySet($scope.game);
-                    $scope.$apply();
-                    console.log(gameInfo);
-                });
             }).catch(function (response) {
                 goToList(response.data.message);
             });
@@ -80,14 +84,13 @@ angular.module('dynablasterApp')
             updateLobby(true);
         }
 
-        $scope.switchStatus = function() {
+        $scope.switchStatus = function() { //TODO: add check on server if game will start
             var lobby = gameService.lobbyGet();
-            /*setTimeout(function() {
-                gameService.sendMsg('/game/lobby/user/status', {
-                    lobbyId: lobby.id,
-                    active: ! lobby.currentLobbyUser.active
-                });
-            }, 500);*/
+            console.log(lobby);
+            gameService.sendMsg('/game/lobby/user/status', {
+                lobbyId: lobby.id,
+                active: ! lobby.currentUser.active
+            });
         };
 
         $scope.updateLobbyUsers = function() {
@@ -96,17 +99,27 @@ angular.module('dynablasterApp')
         };
     })
     .controller('ListGameController', function ($scope, gameService) {
-        gameService.socketInit();
-
+        $scope.searchText = '';
         var lobby = gameService.lobbyGet();
         if (lobby != null) {
-            if (!lobby.owner)
+            if (!lobby.owner) {
+                console.log(lobby.urlSubscribeLobbyUpdate);
+                if (lobby.urlSubscribeLobbyUpdate)
+                    gameService.stompUnsubscribe(lobby.urlSubscribeLobbyUpdate);
                 gameService.lobbyRemoveUser(lobby.id);
+            }
             gameService.lobbySet(null);
         }
 
-        gameService.lobbyList().then(function (data) {
-            $scope.games = data;
-        });
+        $scope.page = 1;
+        $scope.loadAll = function () {
+            gameService.lobbyList($scope.page, $scope.searchText).then(function (data) {
+                $scope.game = data;
+            });
+        };
+        $scope.search = function() {
+            $scope.loadAll();
+        };
+        $scope.loadAll();
     })
 ;

@@ -27,14 +27,20 @@ angular.module('dynablasterApp')
                 self.setImg(self.currentImg);
                 self.move(moveInfo.position.x, moveInfo.position.y);
             });
-            gameService.stompSubscribe('/game/hero/' + this.id + '/bomb', function(data){
-                console.log(data);
+            gameService.stompSubscribe('/game/hero/bomb', function(data){
                 data.forEach(function(item) {
                     gameService.goMap.destroyObject(item);
                 });
             });
-            gameService.stompSubscribe('/game/hero/' + this.id + '/die', function(){
-                gameService.endGameMsg('You died!');
+            gameService.stompSubscribe('/game/hero/' + this.id + '/die', function() { // ??? id - all
+                var lobby = gameService.lobbyGet();
+                if (lobby) {
+                    if (self.user.id == lobby.currentUser.user.id)
+                        gameService.endGameMsg('You died!', gameService.goMap.gems.length == 1);
+                } else {
+                    gameService.endGameMsg('You died!', true);
+                }
+
             });
 
             this.catchKeyCode = function(keyCode) {

@@ -1,26 +1,27 @@
 'use strict';
 
 angular.module('dynablasterApp')
-    .factory('gameService', function ($http, localStorageService, $cookies, Principal) {
+    .factory('gameService', function ($http, localStorageService, $cookies) {
         return {
             socket: null,
             stompClient: null,
             data: {},
-            subscribes: [],
+            subscribes: {},
             startGame: function (type) {
                 return $http.put('api/game/start/' + type).then(function (response) {
                     return response.data;
                 });
             },
-            endGame: function () {
-                this.socketClose();
+            endGame: function (isEnd) {
                 this.lobbySet(null);
-                return $http.put('api/game/end').then(function (response) {
-                    return response.data;
-                });
+                if (isEnd == undefined || isEnd) {
+                    return $http.put('api/game/end').then(function (response) {
+                        return response.data;
+                    });
+                }
             },
-            endGameMsg: function(msg) {
-                this.endGame();
+            endGameMsg: function(msg, isEnd) {
+                this.endGame(isEnd);
                 alert(msg);
                 setTimeout(function() {
                     window.location.href = '/';
@@ -45,16 +46,35 @@ angular.module('dynablasterApp')
                     this.socket.close();
                 }
             },
+            runFnStompConnected: function(connect) {
+                if (!this.stompClient.connected) {
+                    this.stompClient.connect({}, connect);
+                } else {
+                    connect();
+                }
+            },
             sendMsg: function(name, data) {
-                this.stompClient.send('/app/' + name, {}, JSON.stringify(data));
+                var self = this;
+                this.runFnStompConnected(function() {
+                    self.stompClient.send('/app/' + name, {}, JSON.stringify(data));
+                })
             },
             stompSubscribe: function(name, action) {
-                if (this.subscribes.indexOf(name) == -1) {
-                    this.stompClient.subscribe(name, function(msg){
-                        action(JSON.parse(msg.body));
-                    });
-                    this.subscribes.push(name);
+                var self = this;
+                this.runFnStompConnected(function() {
+                    if (self.subscribes[name] == undefined) {
+                        self.subscribes[name] = self.stompClient.subscribe(name, function(msg){
+                            action(JSON.parse(msg.body));
+                        });
+                    }
+                });
+            },
+            stompUnsubscribe: function(name) {
+                if (this.subscribes[name]) {
+                    this.subscribes[name].unsubscribe();
+                    delete this.subscribes[name];
                 }
+                console.log(this.subscribes);
             },
 
             // ---------------------------------------- Lobby ----------------------------------------------------------
@@ -63,30 +83,17 @@ angular.module('dynablasterApp')
                     return response.data;
                 });
             },
-            lobbyList: function() {
-                return $http.get('/api/game/lobby/list').then(function (response) {
-                    return response.data;
-                });
+            lobbyList: function(page, searchText) {
+                return $http.get('/api/game/lobby/list?size=10&page=' + (page - 1) + '&searchText=' + searchText)
+                    .then(function (response) {
+                        return { lobbies: response.data, totalItems: response.headers('X-Total-Count') };
+                    });
             },
             isLobbyGet: function() {
                 return localStorageService.get('lobby') != null;
             },
-            lobbySetCurrentUser: function(data) {
-                if (data.users) {
-                    Principal.identity().then(function(user) {
-                        data.users.forEach(function(lobbyUser) {
-                            if (lobbyUser.user.id == user.id) {
-                                data.currentLobbyUser = lobbyUser;
-                                return true;
-                            }
-                        });
-                    });
-                }
-            },
             lobbyGetFromServer: function(id) {
-                var self = this;
                 return $http.get('/api/game/lobby/' + id + '/get').then(function(response) {
-                    self.lobbySetCurrentUser(response.data);
                     return response.data;
                 });
             },
@@ -110,7 +117,6 @@ angular.module('dynablasterApp')
                     $cookies.put('lobbyId', null);
                     $cookies.put('gameKey', null);
                 }
-                this.lobbySetCurrentUser(lobby);
 
                 return localStorageService.set('lobby', lobby);
             }

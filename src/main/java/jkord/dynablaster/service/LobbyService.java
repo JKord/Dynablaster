@@ -44,7 +44,7 @@ public class LobbyService {
 
         User user = userService.getUserWithAuthorities();
         for (LobbyUser lobbyUser : lobby.getUsers()) {
-            if (lobbyUser.getId().equals(user.getId())) {
+            if (lobbyUser.getUser().equals(user)) {
                 return;
             }
         }
