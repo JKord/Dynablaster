@@ -26,4 +26,3 @@ The game bugs:
 - Socket connection init (refresh page)
 - Bomb is not showing on another window player in multi player (move logic on server)
 - Count users in lobby - remove user form list lobby
-- In multi player a player move very strangely

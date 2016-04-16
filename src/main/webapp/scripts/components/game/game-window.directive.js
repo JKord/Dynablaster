@@ -25,7 +25,6 @@ angular.module('dynablasterApp')
                     w = scope.width;
                     h = scope.height;
                     //});
-                    console.log(scope.game);
                 });
 
                 function drawGame() {
@@ -65,11 +64,7 @@ angular.module('dynablasterApp')
                     gameObj.map.loadObj(scope.game.map);
                     gameObj.map.addToStage(scope.stage);
                     gameService.goMap = gameObj.map;
-
                     gameObj.hero = gameObj.map.gems[getKeyUserFromLobby(gameObj.map.gems)];
-
-                    console.log(scope.game.map);
-                    console.log(gameObj.map.bots);
 
                     window.onkeydown = keydown;
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;

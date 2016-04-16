@@ -57,7 +57,6 @@ angular.module('dynablasterApp')
                         });
 
                         gameService.stompSubscribe('/game/start/' + $scope.game.id, function(gameInfo) {
-                            console.log(gameInfo.key);
                             $cookies.put('gameKey', gameInfo.key);
                             setTimeout(function() {
                                 $scope.startGame();
@@ -86,7 +85,6 @@ angular.module('dynablasterApp')
 
         $scope.switchStatus = function() { //TODO: add check on server if game will start
             var lobby = gameService.lobbyGet();
-            console.log(lobby);
             gameService.sendMsg('/game/lobby/user/status', {
                 lobbyId: lobby.id,
                 active: ! lobby.currentUser.active
@@ -103,7 +101,6 @@ angular.module('dynablasterApp')
         var lobby = gameService.lobbyGet();
         if (lobby != null) {
             if (!lobby.owner) {
-                console.log(lobby.urlSubscribeLobbyUpdate);
                 if (lobby.urlSubscribeLobbyUpdate)
                     gameService.stompUnsubscribe(lobby.urlSubscribeLobbyUpdate);
                 gameService.lobbyRemoveUser(lobby.id);

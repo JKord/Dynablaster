@@ -74,7 +74,6 @@ angular.module('dynablasterApp')
                     this.subscribes[name].unsubscribe();
                     delete this.subscribes[name];
                 }
-                console.log(this.subscribes);
             },
 
             // ---------------------------------------- Lobby ----------------------------------------------------------
