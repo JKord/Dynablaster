@@ -7,14 +7,24 @@ import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.entity.Statistic;
 import jkord.dynablaster.service.GameService;
 import jkord.dynablaster.web.dto.GameDTO;
+import org.jinstagram.Instagram;
+import org.jinstagram.auth.InstagramAuthService;
+import org.jinstagram.auth.model.Token;
+import org.jinstagram.auth.model.Verifier;
+import org.jinstagram.auth.oauth.InstagramService;
+import org.jinstagram.entity.users.basicinfo.UserInfo;
+import org.jinstagram.exceptions.InstagramException;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContext;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
+import java.util.Scanner;
 
 @RestController
 @Secured(AuthoritiesConstants.USER)
