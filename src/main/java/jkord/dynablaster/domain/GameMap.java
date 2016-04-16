@@ -133,16 +133,6 @@ public class GameMap implements Serializable {
         mapObjects[x][y] = obj;
     }
 
-    public void update2() { // TODO: delete
-        bots.forEach((i, bot) -> {
-            setFastObjToMap(
-                new MapObject(MapObjectType.MONSTER, bot),
-                bot.getPosition().getX(),
-                bot.getPosition().getY()
-            );
-        });
-    }
-
     public void update() {
         players.forEach((i, player) -> player.update());
         bots.forEach((i, bot) -> bot.update());

@@ -9,14 +9,20 @@ import javax.persistence.*;
 @Table(name = "lobby_user")
 public class LobbyUser extends BaseEntity {
 
-    @OneToMany
+    @ManyToOne
     protected User user;
+
+    @ManyToOne
+    protected Lobby lobby;
 
     @Column(name = "is_active", length = 1)
     protected boolean isActive = false;
 
-    public LobbyUser(User user) {
+    public LobbyUser() { }
+
+    public LobbyUser(User user, Lobby lobby) {
         this.user = user;
+        this.lobby = lobby;
     }
 
     public User getUser() {
@@ -25,6 +31,14 @@ public class LobbyUser extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Lobby getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
     }
 
     public boolean isActive() {
@@ -38,10 +52,11 @@ public class LobbyUser extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-
         if (o == null || getClass() != o.getClass())
             return false;
+        LobbyUser lobbyUser = (LobbyUser) o;
 
-        return user.equals(o);
+        return user.getId().equals(lobbyUser.getUser().getId())
+            && lobby.getId().equals(lobbyUser.getLobby().getId());
     }
 }

@@ -1,38 +1,43 @@
 package jkord.dynablaster.web.rest;
 
 import jkord.core.security.AuthoritiesConstants;
+import jkord.core.web.rest.errors.CustomParameterizedException;
 import jkord.dynablaster.domain.IGame;
 import jkord.dynablaster.domain.piece.GameType;
-import jkord.dynablaster.entity.Statistics;
+import jkord.dynablaster.entity.Statistic;
 import jkord.dynablaster.service.GameService;
-import jkord.dynablaster.service.MessagingService;
 import jkord.dynablaster.web.dto.GameDTO;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 @RestController
 @Secured(AuthoritiesConstants.USER)
 @RequestMapping("/api/game")
 public class GameResource {
 
-    @Inject
-    private GameService gameService;
-
-    @Inject
-    protected MessagingService messagingService;
+    @Inject private GameService gameService;
 
     @RequestMapping(value = "/start/{type}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public GameDTO start(HttpSession session, @PathVariable String type) {
+    public GameDTO start(HttpServletResponse response,
+        HttpSession session,
+        @PathVariable String type,
+        @CookieValue(name = "lobbyId") String lobbyIdStr,
+        @CookieValue(name = "gameKey") String gameKey
+    ) {
         IGame game = gameService.getGame(session);
         if (game == null) {
-            game = gameService.createGame(GameType.valueOf(type.toUpperCase()));
+            if (gameKey.equals("null")) {
+                Long lobbyId = (lobbyIdStr.equals("null"))? -1 : Long.decode(lobbyIdStr);
+                game = gameService.createGame(GameType.valueOf(type.toUpperCase()), lobbyId);
+            } else {
+                game = gameService.getGame(gameKey);
+            }
             session.setAttribute(IGame.KEY_NAME, game.getKey());
         }
 
@@ -40,13 +45,15 @@ public class GameResource {
     }
 
     @RequestMapping(value = "/end", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Statistics end(HttpSession session) {
+    public Statistic end(HttpSession session) {
         IGame game = gameService.getGame(session);
         if (game != null) {
             gameService.endGame(game);
             session.setAttribute(IGame.KEY_NAME, null);
+        } else {
+            throw new CustomParameterizedException("The game has been completed!");
         }
 
-        return game.getStatistics();
+        return game.getStatistic();
     }
 }

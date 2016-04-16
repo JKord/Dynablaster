@@ -13,11 +13,8 @@ buildscript {
         classpath group: 'org.springframework.build.gradle', name: 'propdeps-plugin', version: '0.0.7'
         classpath group: 'com.moowork.gradle', name: 'gradle-node-plugin', version: '0.11'
   	    classpath group: 'com.moowork.gradle', name: 'gradle-gulp-plugin', version: '0.11'
-        //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
-
-
 
 apply plugin: 'idea'
 apply plugin: 'java'
@@ -29,6 +26,7 @@ apply plugin: 'maven'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
 apply plugin: 'propdeps'
+
 defaultTasks 'bootRun'
 
 bootRepackage {

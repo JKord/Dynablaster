@@ -75,13 +75,17 @@ angular.module('dynablasterApp')
             },
             destroyObject: function(obj){
                 var self = this;
+
+                function destroyObj(i, item, arr) {
+                    arr.splice(i, 1);
+                    self.stage.removeChild(item.obj);
+                }
+
                 switch (obj.type) {
                     case 'BRICK': {
                         this.bricks.forEach(function(item, i, bricks) {
                             if (item.x == obj.position.x && item.y == obj.position.y) {
-                                bricks.splice(i, 1);
-                                self.stage.removeChild(item.obj);
-
+                                destroyObj(i, item, bricks);
                                 return true;
                             }
                         });
@@ -89,9 +93,7 @@ angular.module('dynablasterApp')
                     case 'MONSTER': case 'ENEMY': {
                         this.bots.forEach(function(item, i, bots) {
                             if (item.id == obj.id) {
-                                bots.splice(i, 1);
-                                item.removeFromStage(self.stage);
-
+                                destroyObj(i, item, bots);
                                 return true;
                             }
                         });
@@ -100,19 +102,15 @@ angular.module('dynablasterApp')
                         }
                     } break;
                     case 'PLAYER': {
-                        console.log(this.gems);
                         this.gems.forEach(function(item, i, gems) {
                             if (item.id == obj.id) {
-                                gems.splice(i, 1);
-                                item.removeFromStage(self.stage);
-                                gameService.endGameMsg('You died!');
-
+                                destroyObj(i, item, gems);
                                 return true;
                             }
                         });
                     } break;
                 }
-                this.map[obj.position.x][obj.position.y] = {id: -1, type:"FREE"};
+                this.map[obj.position.x][obj.position.y] = {id: -1, type: 'FREE'};
             }
         };
         return GOGround;

@@ -11,10 +11,16 @@ import jkord.dynablaster.domain.obj.PlayerObject;
 import jkord.dynablaster.domain.piece.Direction;
 import jkord.dynablaster.domain.piece.GameType;
 import jkord.dynablaster.domain.piece.Position;
+import jkord.dynablaster.entity.Lobby;
+import jkord.dynablaster.entity.LobbyUser;
+import jkord.dynablaster.repository.LobbyRepository;
 import jkord.dynablaster.web.MsgRoute;
+import jkord.dynablaster.web.dto.GameDTO;
 import jkord.dynablaster.web.dto.MapPositionObject;
+import jkord.dynablaster.web.dto.PlayerMoveInfo;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -27,43 +33,50 @@ public class GameService {
     private static final Map<String, String> usersKeys = new HashMap<>();
     private static ExecutorService executorService;
 
-    @Inject
-    private UserService sUser;
+    @Inject private UserService userService;
+    @Inject private LobbyService lobbyService;
+    @Inject private LobbyRepository rlobby;
 
-    @Inject
-    protected MessagingService sMessaging;
+    @Inject protected MessagingService sMessaging;
 
-    @Inject
-    public GameService(MessagingService messagingService) {
+    @PostConstruct
+    private void init() {
+        PlayerObject.SMessaging = sMessaging;
+        BotObject.SMessaging = sMessaging;
+
         executorService = Executors.newCachedThreadPool(
             new ThreadFactoryBuilder()
-            .setNameFormat("game-%d")
-            .setDaemon(true)
-            .build()
+                .setNameFormat("game-%d")
+                .setDaemon(true)
+                .build()
         );
-
-        // FIXME
-        PlayerObject.SMessaging = messagingService;
-        BotObject.SMessaging = messagingService;
     }
 
-    public IGame createGame(GameType type) {
+    public IGame createGame(GameType type, Long lobbyId) {
         String key = RandomUtil.generateKeyGame();
 
         IGame game;
         switch (type) {
             case SINGLE: {
                 game = new SingleGame(key);
-                User user = sUser.getUserWithAuthorities();
+                User user = userService.getUserWithAuthorities();
                 ((SingleGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
-            case MULTI: { // TODO
+            case MULTI: {
                 game = new MultiGame(key);
+                Lobby lobby = rlobby.findOneById(lobbyId);
+                ((MultiGame) game).start(lobby);
+
+                lobby.getUsers().forEach(lobbyUser -> addUserKey(lobbyUser.getUser().getLogin(), key));
+                sMessaging.send(String.format(MsgRoute.GAME_START, lobby.getId()), new GameDTO(game));
+
+                lobby.setActive(true);
+                rlobby.save(lobby);
             } break;
             case BOTS: {
                 game = new SingleWithBotsGame(key);
-                User user = sUser.getUserWithAuthorities();
+                User user = userService.getUserWithAuthorities();
                 ((SingleWithBotsGame) game).start(user);
                 addUserKey(user.getLogin(), key);
             } break;
@@ -89,8 +102,9 @@ public class GameService {
             case SINGLE: case BOTS: {
                 removeUserKey(((SingleGame) game).getUser().getLogin());
             } break;
-            case MULTI: { // TODO
-
+            case MULTI: {
+                Lobby lobby = ((MultiGame) game).getLobby();
+                lobby.getUsers().forEach(lobbyUser -> removeUserKey(lobbyUser.getUser().getLogin()));
             } break;
             default: {
                 throw new CustomParameterizedException("Game type is not supported");
@@ -132,14 +146,25 @@ public class GameService {
             return ((SingleGame) game).getUser();
         }
 
+        if (game instanceof MultiGame) {
+            for (LobbyUser lobbyUser : ((MultiGame) game).getLobby().getUsers()) {
+                if (lobbyUser.getUser().getLogin().equals(name))
+                    return lobbyUser.getUser();
+            }
+        }
+
         return null;
     }
 
     public void movePlayer(User user, IGame game, String direction) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.move(Direction.valueOf(direction.toUpperCase()));
-        sMessaging.send(String.format(MsgRoute.PLAYER_MOVE, player.getId()), player.getPosition());
+        sMessaging.send(
+            String.format(MsgRoute.PLAYER_MOVE, player.getId()),
+            new PlayerMoveInfo(player, direction)
+        );
     }
+
     public void bombBurst(User user, IGame game, Position position) {
         PlayerObject player = game.getCurrentPlayer(user.getId());
         player.putBomb(position);

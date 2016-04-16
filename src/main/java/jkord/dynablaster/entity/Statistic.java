@@ -4,24 +4,23 @@ import jkord.core.domain.BaseEntity;
 import jkord.core.domain.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(name = "statistics")
-public class Statistics extends BaseEntity implements Serializable {
+@Table(name = "statistic")
+public class Statistic extends BaseEntity {
 
-    @OneToMany
+    @ManyToOne
     protected User userWon;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    protected Set<User> usersPlayed;
+    protected List<User> usersPlayed;
 
     @Column(name = "points")
     @ElementCollection
     protected Map<Long, Integer> pointsUsers;
 
-    public Statistics(Set<User> usersPlayed) {
+    public Statistic(List<User> usersPlayed) {
         this.usersPlayed = usersPlayed;
 
         pointsUsers = new HashMap<>();
@@ -36,11 +35,11 @@ public class Statistics extends BaseEntity implements Serializable {
         this.userWon = userWon;
     }
 
-    public Set<User> getUsersPlayed() {
+    public List<User> getUsersPlayed() {
         return usersPlayed;
     }
 
-    public void setUsersPlayed(Set<User> usersPlayed) {
+    public void setUsersPlayed(List<User> usersPlayed) {
         this.usersPlayed = usersPlayed;
     }
 

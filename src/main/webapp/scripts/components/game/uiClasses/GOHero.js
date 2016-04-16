@@ -18,46 +18,45 @@ angular.module('dynablasterApp')
             this.setImg(this.img.down);
 
             var self = this;
-            gameService.stompSubscribe('/game/hero/' + this.id + '/move', function(position){
+            function getImgByDirection(direction) {
+                return self.img[direction];
+            }
+
+            gameService.stompSubscribe('/game/hero/' + this.id + '/move', function(moveInfo){
+                self.currentImg = getImgByDirection(moveInfo.direction);
                 self.setImg(self.currentImg);
-                self.move(position.x, position.y);
+                self.move(moveInfo.position.x, moveInfo.position.y);
             });
-            gameService.stompSubscribe('/game/hero/' + this.id + '/bomb', function(data){
-                console.log(data);
+            gameService.stompSubscribe('/game/hero/bomb', function(data){
                 data.forEach(function(item) {
                     gameService.goMap.destroyObject(item);
                 });
             });
-            gameService.stompSubscribe('/game/hero/' + this.id + '/die', function(){
-                gameService.endGameMsg('You died!');
+            gameService.stompSubscribe('/game/hero/' + this.id + '/die', function() { // ??? id - all
+                var lobby = gameService.lobbyGet();
+                if (lobby) {
+                    if (self.user.id == lobby.currentUser.user.id)
+                        gameService.endGameMsg('You died!', gameService.goMap.gems.length == 1);
+                } else {
+                    gameService.endGameMsg('You died!', true);
+                }
+
             });
 
             this.catchKeyCode = function(keyCode) {
-                var img, direction;
+                var direction;
                 switch (keyCode) {
-                    case 38: case 87: { // Up
-                    img = this.img.up;
-                    direction = 'up';
-                } break;
-                    case 40: case 83: { // Down
-                    img = this.img.down;
-                    direction = 'down';
-                } break;
-                    case 37: case 65: { // Left
-                    img = this.img.left;
-                    direction = 'left';
-                } break;
-                    case 39: case 68: { // Right
-                    img = this.img.right;
-                    direction = 'right';
-                } break;
+                    case 38: case 87: direction = 'up'; break;
+                    case 40: case 83: direction = 'down'; break;
+                    case 37: case 65: direction = 'left'; break;
+                    case 39: case 68: direction = 'right'; break;
                     case 32: { // Bomb
                         self.putBomb();
                     } break;
                 }
                 if (direction) {
                     gameService.sendMsg('player/move', { direction: direction });
-                    this.currentImg = img;
+                    this.currentImg = getImgByDirection(direction);
                 }
             };
             this.putBomb = function() {

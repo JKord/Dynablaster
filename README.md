@@ -9,5 +9,20 @@ The earlier game Warp & Warp by Namco is most likely the inspiration for the Bom
 
 Used technologies and tools:
 - Java, jhipster, Spring Boot
-- MySql, WebSockets, OAuth
+- MySql, Hibernate, WebSockets, OAuth
 - AngularJS, Bootstrap, npm, Gulp, Bower
+- Spring MVC, Spring Security, Spring Social
+- gradle, liquibase, swagger
+
+It is possible add:
+- Status active of player for game is not ready
+- Edit logic move of bots (collision with walls ..) - used algorithm A* now
+- Set up for "Play with bots" for enemy is use algorithm A* and set current position of a player for search a path
+- Make statistics
+- Bonuses
+- Add exit from game for another player in multi player
+
+The game bugs:
+- Socket connection init (refresh page)
+- Bomb is not showing on another window player in multi player (move logic on server)
+- Count users in lobby - remove user form list lobby

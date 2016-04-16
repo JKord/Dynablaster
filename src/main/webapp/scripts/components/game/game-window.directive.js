@@ -17,16 +17,16 @@ angular.module('dynablasterApp')
 
                 gameService.startGame(scope.typeGame).then(function (data) {
                     scope.game = data;
-                    gameService.socketInit(function() {
-                        gameService.sendMsg('game/start', {});
-                        drawGame();
-                        elem[0].width = scope.width;
-                        elem[0].height = scope.height;
-                        w = scope.width;
-                        h = scope.height;
-                    });
-                    console.log(scope.game);
+                    //gameService.socketInit(function() {
+                    gameService.sendMsg('game/start', {});
+                    drawGame();
+                    elem[0].width = scope.width;
+                    elem[0].height = scope.height;
+                    w = scope.width;
+                    h = scope.height;
+                    //});
                 });
+
                 function drawGame() {
                     if (scope.stage) {
                         scope.stage.autoClear = true;
@@ -43,14 +43,28 @@ angular.module('dynablasterApp')
                     loaderRes.loadAssets();
                 }
 
+                function getKeyUserFromLobby(gems) {
+                    var lobby = gameService.lobbyGet(),
+                        key = 0;
+
+                    if (lobby) {
+                        lobby.users.forEach(function(lobbyUser, index) {
+                            if (lobbyUser.user.id == lobby.currentUser.user.id) {
+                                key = index;
+                            }
+                            gems[index].user = lobbyUser.user;
+                        });
+                    }
+
+                    return key;
+                }
+
                 function handleComplete() {
                     gameObj.map = new GOMap();
                     gameObj.map.loadObj(scope.game.map);
                     gameObj.map.addToStage(scope.stage);
                     gameService.goMap = gameObj.map;
-
-                    console.log(scope.game.map);
-                    console.log(gameObj.map.bots);
+                    gameObj.hero = gameObj.map.gems[getKeyUserFromLobby(gameObj.map.gems)];
 
                     window.onkeydown = keydown;
                     createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -59,9 +73,7 @@ angular.module('dynablasterApp')
                 }
 
                 function keydown(event) {
-                    gameObj.map.gems.forEach(function(gem) {
-                        gem.catchKeyCode(event.keyCode);
-                    });
+                    gameObj.hero.catchKeyCode(event.keyCode);
                 }
                 function update(event) {
 

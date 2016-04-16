@@ -1,0 +1,20 @@
+<div ng-cloak>
+    <div class="row">
+        <div class="col-md-2">
+           <h1>Create game</h1>
+        </div>
+        <div class="col-md-8">
+            <br>
+            <form role="form" ng-submit="create()">
+                <fieldset class="form-group">
+                    <label for="name">Game Name</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           ng-minlength=1 ng-maxlength=255 ng-pattern="/^[a-z0-9]*$/" ng-model="lobby.name">
+                    <br>
+                    <span ng-show="lobbyForm.name" class="alert alert-danger" role="alert">Error: {{lobbyForm.name.msg}}</span>
+                </fieldset>
+                <button type="submit" class="btn btn-primary pull-right">Create</button>
+            </form>
+        </div>
+    </div>
+</div>

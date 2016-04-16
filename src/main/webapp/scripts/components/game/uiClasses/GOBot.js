@@ -15,27 +15,6 @@ angular.module('dynablasterApp')
             gameService.stompSubscribe('/game/bot/' + this.id + '/move', function(data){
                 self.move(data.position.x, data.position.y);
             });
-
-            /*this.newPath = function (){
-                gameService.sendMsg('bot/move', {id: this.id, path: []});
-            };
-            this.update = function() {
-                if (self.pathToGo) {
-                    if (self.pathToGo[self.pathToGoI]) {
-                        var poz = self.pathToGo[self.pathToGoI];
-                        self.move(poz.x, poz.y);
-                        self.pathToGoI++;
-                    } else {
-                        self.pathToGo = null;
-                        self.pathToGoI = 0;
-                        setTimeout(function() {
-                            self.newPath();
-                        }, 2000);
-                    }
-                }
-            };
-            this.newPath();*/
-
         } __extends(GOBot, GObj);
 
         return GOBot;

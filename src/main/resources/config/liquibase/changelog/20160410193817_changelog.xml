@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="autoIncrement" value="true" dbms="mysql,h2,postgresql,oracle"/>
+
+    <changeSet author="Jura" id="1460306304128">
+        <createTable tableName="authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="persistent_audit_event">
+            <column autoIncrement="${autoIncrement}" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="datetime"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="persistent_token">
+            <column name="series" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ip_address" type="VARCHAR(39)"/>
+            <column name="token_date" type="date"/>
+            <column name="token_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_agent" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="social_user_connection">
+            <column autoIncrement="${autoIncrement}" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="social_user_connectionPK"/>
+            </column>
+            <column name="access_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_name" type="VARCHAR(255)"/>
+            <column name="expire_time" type="BIGINT"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="profile_url" type="VARCHAR(255)"/>
+            <column name="provider_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refresh_token" type="VARCHAR(255)"/>
+            <column name="secret" type="VARCHAR(255)"/>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user">
+            <column autoIncrement="${autoIncrement}" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="datetime"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="lang_key" type="VARCHAR(5)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="reset_date" type="datetime"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+
+        <createTable tableName="user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users.csv"
+                  separator=";"
+                  tableName="user">
+            <column name="activated" type="boolean"/>
+            <column name="created_date" type="timestamp"/>
+        </loadData>
+        <dropDefaultValue tableName="user" columnName="created_date" columnDataType="datetime"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/authorities.csv"
+                  separator=";"
+                  tableName="authority"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users_authorities.csv"
+                  separator=";"
+                  tableName="user_authority"/>
+
+        <createTable tableName="lobby">
+            <column autoIncrement="${autoIncrement}" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="lobbyPK"/>
+            </column>
+            <column name="count_users" type="SMALLINT"/>
+            <column name="created_at" type="datetime" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="owner_id" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="lobby_lobby_users">
+            <column name="lobby_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lobby_users_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lobby_user">
+            <column autoIncrement="${autoIncrement}" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="lobby_userPK"/>
+            </column>
+            <column name="is_active" type="BOOLEAN"/>
+            <column name="lobby_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="statistic">
+            <column autoIncrement="${autoIncrement}" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="statisticPK"/>
+            </column>
+            <column name="userWon_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="statistic_user">
+            <column name="statistic_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="usersPlayed_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="Statistic_pointsUsers">
+            <column name="Statistic_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="INT"/>
+            <column name="pointsUsers_KEY" type="BIGINT"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="event_id, name" tableName="persistent_audit_evt_data"/>
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="user_authority"/>
+        <addPrimaryKey columnNames="name" constraintName="authorityPK" tableName="authority"/>
+        <addPrimaryKey columnNames="series" constraintName="persistent_tokenPK" tableName="persistent_token"/>
+
+        <addUniqueConstraint columnNames="email" constraintName="UC_USEREMAIL_COL" tableName="user"/>
+        <addUniqueConstraint columnNames="login" constraintName="UC_USERLOGIN_COL" tableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="persistent_audit_evt_data" constraintName="FK_4jg177onm6l5jpjgx7rxvtntp" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="persistent_audit_event"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_authority" constraintName="FK_5losscgu02yaej7prap7o6g5s" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="persistent_token" constraintName="FK_gnmx6upplispd97ynh0p5ao8u" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="user_authority" constraintName="FK_tnnyxjpcvg2aj0d0i6ufnabm2" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="authority"/>
+
+
+        <addPrimaryKey columnNames="Statistic_id, pointsUsers_KEY" tableName="Statistic_pointsUsers"/>
+        <addUniqueConstraint columnNames="lobby_users_id" tableName="lobby_lobby_users"/>
+
+        <addForeignKeyConstraint baseColumnNames="lobby_id" baseTableName="lobby_user" constraintName="FK_3b9hlhqu239h728sfarg1vt8e" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lobby"/>
+        <addForeignKeyConstraint baseColumnNames="userWon_id" baseTableName="statistic" constraintName="FK_c6uim2o7gwylgksloktcqks3r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="lobby_id" baseTableName="lobby_lobby_users" constraintName="FK_ma1rkcs7h1x5dj3u8dqbhp09x" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lobby"/>
+        <addForeignKeyConstraint baseColumnNames="lobby_users_id" baseTableName="lobby_lobby_users" constraintName="FK_dsljglc75l41up6laww0bqt1a" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lobby_user"/>
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="lobby" constraintName="FK_4are7rfi2e1h4s1keu9gah547" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="lobby_user" constraintName="FK_t2jnpp7ubkip93ulaymoc4s5p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="usersPlayed_id" baseTableName="statistic_user" constraintName="FK_l9e9agmmlk843xrjxqfx97hpp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="statistic_id" baseTableName="statistic_user" constraintName="FK_qlh96xy8o0jfepsl83salq03" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="statistic"/>
+        <addForeignKeyConstraint baseColumnNames="Statistic_id" baseTableName="Statistic_pointsUsers" constraintName="FK_9imh6xip9hpwc8fqa23iijj4j" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="statistic"/>
+    </changeSet>
+</databaseChangeLog>
