@@ -24,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/oauth")
 public class OAuthController {
 
+
+    // http://stackoverflow.com/questions/2168610/which-html-parser-is-the-best
+
     private String verifierCode;
 
     private final String
@@ -50,6 +53,13 @@ public class OAuthController {
         //https://api.instagram.com/oauth/authorize/?client_id=230d5a4e14e04c82883bbe923b91a39d&redirect_uri=http://localhost:8080/oauth/instagram_callback&response_type=token&scope=basic
 
         // https://api.instagram.com/oauth/access_token?client_id=230d5a4e14e04c82883bbe923b91a39d&client_secret=8c1f0c641720483f8adf553a993b2f6e&grant_type=authorization_code&redirect_uri=http://localhost:8080/oauth/instagram_callback&response_type=code
+
+        return new RedirectView("/", true);
+    }
+
+    @RequestMapping(value = "/instagram_callback", method = RequestMethod.POST)
+    public RedirectView instagramCallbackP(HttpServletRequest request) {
+        // https://api.instagram.com/oauth/access_token?client_id=230d5a4e14e04c82883bbe923b91a39d&client_secret=8c1f0c641720483f8adf553a993b2f6e&grant_type=authorization_code&redirect_uri=http://localhost:8080/oauth/instagram_subscription&code=CODE
 
         return new RedirectView("/", true);
     }
